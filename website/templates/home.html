@@ -24,14 +24,12 @@
 	{% endfor %}
 	</tbody>
 </table>
-<br />
 <form method="POST">
 	<div class="input-group">
-		<input type="text" id="movie_title" name="movie_title" class="form-control" placeholder="Movie title">
-	</div>
-	<br />
-	<div align="center">
-		<button type="submit" class="btn">Add Movie</button>
+		<input type="text" class="form-control" id="movie_title" name="movie_title" placeholder="Movie title">
+		<div class="input-group-append">
+			<button class="btn btn-primary" type="submit">Add Movie</button>
+		</div>
 	</div>
 </form>
 {% endblock %}

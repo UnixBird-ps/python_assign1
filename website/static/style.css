@@ -23,3 +23,8 @@ th.right-align
 {
 	text-align: right;
 }
+
+span.username
+{
+	color: rgba( 255, 255, 255, .5 );
+}

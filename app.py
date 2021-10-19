@@ -1,7 +1,7 @@
 from website import create_app
 from logging.config import dictConfig
 
-def main() :
+if __name__ == '__main__':
 	dictConfig(
 		{
 			'version': 1,
@@ -18,9 +18,5 @@ def main() :
 			'root': { 'level': 'INFO', 'handlers': [ 'wsgi' ] }
 		}
 	)
-
 	app = create_app()
 	app.run( debug = True, port = 8000 )
-
-if __name__ == '__main__':
-	main()
