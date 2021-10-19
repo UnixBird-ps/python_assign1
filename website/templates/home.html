@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<h1 align="center">Movies to watch</h1>
+<table class="table table-striped" id="movies">
+	<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Title</th>
+			<th scope="col">Watched</th>
+			<th class="right-align" scope="col">Remove</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% set list_pos = namespace( num = 0 ) %}
+	{% for movie in user.movies %}
+	{% set list_pos.num = list_pos.num + 1 %}
+		<tr id="tr_{{ movie.id }}">
+			<th scope="row">{{ list_pos.num }}</th>
+			<td>{{ movie.title }}</td>
+			<td><input type="checkbox" name="done_check" class="custom-check-input" onClick="doneMovie( {{ movie.id }} )"{% if movie.done %} value="1" checked {% endif %}/></td>
+			<td><div class="close" onClick="deleteMovie( {{ movie.id }} )"><span aria-hidden="true">&times;</span></div></td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+<br />
+<form method="POST">
+	<div class="input-group">
+		<input type="text" id="movie_title" name="movie_title" class="form-control" placeholder="Movie title">
+	</div>
+	<br />
+	<div align="center">
+		<button type="submit" class="btn">Add Movie</button>
+	</div>
+</form>
+{% endblock %}
