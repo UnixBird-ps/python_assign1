@@ -50,9 +50,6 @@
 					{% endif %}
 				</div>
 			</div>
-			{% if user.is_authenticated %}
-			<span class="username">{{ user.first_name }}</span>
-			{% endif %}
 		</nav>
 		{% with messages = get_flashed_messages( with_categories = true ) %}
 		{% if messages %}
@@ -76,6 +73,12 @@
 		{% endfor %}
 		{% endif %}
 		{% endwith %}
+		{% if user.is_authenticated %}
+		<div class="username">
+			<span>Logged in as: {{ user.first_name }}</span>
+		</div>
+		{% endif %}
+		<br>
 		<div class="container">
 		{% block content %}
 		{% endblock %}
