@@ -12,7 +12,7 @@ function deleteMovie( pMovieId )
 			var lTable = document.getElementById( 'movies' );
 			var lTableRow = lTable.querySelector( 'tr#tr_' + pMovieId );
 			lTableRow.remove();
-			tableChanged();
+			renumTableRows();
 		}
 	);
 }
@@ -31,7 +31,8 @@ function doneMovie( pMovieId )
 	).then( ( _res ) => {} );
 }
 
-function tableChanged()
+
+function renumTableRows()
 {
 	var lTable = document.getElementById( 'movies' );
 	var lRows = lTable.querySelectorAll( 'tr[id^="tr_"' );
