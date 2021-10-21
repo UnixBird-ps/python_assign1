@@ -18,8 +18,8 @@
 		<tr id="tr_{{ movie.id }}">
 			<th scope="row">{{ list_pos.num }}</th>
 			<td>{{ movie.title }}</td>
-			<td><input type="checkbox" name="done_check" class="custom-check-input" onClick="doneMovie( {{ movie.id }} )"{% if movie.done %} value="1" checked {% endif %}/></td>
-			<td><div class="close" onClick="deleteMovie( {{ movie.id }} )"><span aria-hidden="true">&times;</span></div></td>
+			<td><input id="checkbox_{{ movie.id }}" type="checkbox" name="done_check" class="custom-check-input"{% if movie.done %} value="1" checked {% endif %}/></td>
+			<td><div id="div_{{ movie.id }}" class="close"><span aria-hidden="true">&times;</span></div></td>
 		</tr>
 	{% endfor %}
 	</tbody>
