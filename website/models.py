@@ -4,6 +4,7 @@ from sqlalchemy.sql import func
 
 class Movie( db.Model ) :
 	id = db.Column( db.Integer, primary_key = True )
+	img_src = db.Column( db.String( 250 ) )
 	title = db.Column( db.String( 100 ) )
 	genre = db.Column( db.String( 50 ) )
 	length = db.Column( db.Integer ) # minutes

@@ -6,6 +6,7 @@
 	<thead>
 		<tr>
 			<th scope="col">#</th>
+			<th scope="col">Poster</th>
 			<th scope="col">Title</th>
 			<th scope="col">Genre</th>
 			<th scope="col">Length</th>
@@ -19,6 +20,7 @@
 	{% set list_pos.num = list_pos.num + 1 %}
 		<tr id="tr_{{ movie.id }}">
 			<th scope="row">{{ list_pos.num }}</th>
+			<td><img class="poster" src="{{ movie.img_src }}"/></td>
 			<td id="title_{{ movie.id }}">{{ movie.title }}</td>
 			<td id="genre_{{ movie.id }}">{{ movie.genre }}</td>
 			<td id="length_{{ movie.id }}">{{ movie.length }}</td>
