@@ -12,27 +12,39 @@ views = Blueprint( 'views', __name__ )
 #	return render_template( 'home.html' )
 
 
-@views.route( "/", methods = [ 'GET', 'POST' ] )
+#@views.route( "/", methods = [ 'GET', 'POST' ] )
+@views.post( '/' )
 @login_required
-def home():
-	if request.method == 'POST' :
-		movie_title = request.form.get( 'movie_title' )
-		movie_genre = request.form.get( 'movie_genre' )
-		movie_length = request.form.get( 'movie_length' )
-		movie_done = request.form.get( 'done_check' )
-		if len( movie_title ) < 1 :
-			flash( 'Title is too short!', category = 'error' )
-		else :
-			new_movie = Movie( title = movie_title, genre = movie_genre, length = movie_length, done = movie_done, user_id = current_user.id )
-			db.session.add( new_movie )
-			db.session.commit()
-			flash( 'Movie added!', category = 'success' )
-
+def home_post():
+	#if request.method == 'POST' :
+	form_title = request.form.get( 'movie_title' )
+	form_img_url = request.form.get( 'movie_img' )
+	form_genre = request.form.get( 'movie_genre' )
+	form_length = request.form.get( 'movie_length' )
+	#form_done = request.form.get( 'done_check' )
+	if len( form_title ) < 1 :
+		flash( 'Title is too short!', category = 'error' )
+	else :
+		new_movie = Movie( title = form_title, img_src = form_img_url, genre = form_genre, length = form_length, user_id = current_user.id )
+		db.session.add( new_movie )
+		db.session.commit()
+		flash( 'Movie added!', category = 'success' )
 	return render_template( 'home.html', user = current_user )
 
 
 
-@views.route( '/delete-movie', methods = [ 'POST' ] )
+
+@views.get( '/' )
+@login_required
+def home_get():
+	return render_template( 'home.html', user = current_user )
+
+
+
+
+#@views.route( '/delete-movie', methods = [ 'POST' ] )
+@views.post( '/delete-movie' )
+@login_required
 def delete_movie() :
 	req_movie = json.loads( request.data )
 	movie_id = req_movie[ 'id' ]
@@ -41,12 +53,14 @@ def delete_movie() :
 		if movie.user_id == current_user.id :
 			db.session.delete( movie )
 			db.session.commit()
-
 	return jsonify( {} )
 
 
 
-@views.route( '/done-movie', methods = [ 'POST' ] )
+
+#@views.route( '/done-movie', methods = [ 'POST' ] )
+@views.post( '/done-movie' )
+@login_required
 def done_movie() :
 	req_movie = json.loads( request.data )
 	movie_id = req_movie[ 'id' ]

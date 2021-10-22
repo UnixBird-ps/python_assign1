@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% block title %}Home{% endblock %}
 {% block content %}
 <h1 align="center">Movies to watch</h1>
 <table class="table table-striped" id="movies">
@@ -11,7 +10,7 @@
 			<th scope="col">Genre</th>
 			<th scope="col">Length</th>
 			<th scope="col">Watched</th>
-			<th class="right-align" scope="col">Remove</th>
+			<th scope="col" class="right-align">Remove</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -33,6 +32,7 @@
 <form method="POST">
 	<div class="input-group">
 		<input type="text" class="form-control" id="movie_title" name="movie_title" placeholder="Movie title">
+		<input type="text" class="form-control" id="movie_img" name="movie_img" placeholder="Poster URL">
 		<input type="text" class="form-control" id="movie_genre" name="movie_genre" placeholder="Genre">
 		<input type="text" class="form-control" id="movie_length" name="movie_length" placeholder="Length">
 		<div class="input-group-append">

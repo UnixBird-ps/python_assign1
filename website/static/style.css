@@ -35,7 +35,12 @@ div.username
 
 img.poster
 {
-	width: 40;
-	height: 60;
+	width: 40px;
+	height: 60px;
 	border:1px solid black;
+}
+
+div.close
+{
+	float: right;
 }
