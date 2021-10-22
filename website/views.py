@@ -7,17 +7,23 @@ import json
 views = Blueprint( 'views', __name__ )
 
 
+#@app.get( '/' )
+#def index():
+#	return render_template( 'home.html' )
+
 
 @views.route( "/", methods = [ 'GET', 'POST' ] )
 @login_required
 def home():
 	if request.method == 'POST' :
 		movie_title = request.form.get( 'movie_title' )
+		movie_genre = request.form.get( 'movie_genre' )
+		movie_length = request.form.get( 'movie_length' )
 		movie_done = request.form.get( 'done_check' )
 		if len( movie_title ) < 1 :
-			flash( 'Note is too short!', category = 'error' )
+			flash( 'Title is too short!', category = 'error' )
 		else :
-			new_movie = Movie( title = movie_title, done = movie_done, user_id = current_user.id )
+			new_movie = Movie( title = movie_title, genre = movie_genre, length = movie_length, done = movie_done, user_id = current_user.id )
 			db.session.add( new_movie )
 			db.session.commit()
 			flash( 'Movie added!', category = 'success' )

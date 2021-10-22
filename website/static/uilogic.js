@@ -21,8 +21,8 @@ function deleteMovie( pMovieId )
 function doneMovie( pMovieId )
 {
 	var lTable = document.getElementById( 'movies' );
-	var lRow = lTable.querySelector( 'tr#tr_' + pMovieId );
-	var lCheckBox = lRow.querySelector ( 'input[type="checkbox"]' );
+	var lTableRow = lTable.querySelector( 'tr#tr_' + pMovieId );
+	var lCheckBox = lTableRow.querySelector ( 'input[id^="checkbox_"' );
 	fetch( '/done-movie',
 		{
 			method : 'POST',

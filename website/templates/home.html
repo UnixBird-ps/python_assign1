@@ -7,6 +7,8 @@
 		<tr>
 			<th scope="col">#</th>
 			<th scope="col">Title</th>
+			<th scope="col">Genre</th>
+			<th scope="col">Length</th>
 			<th scope="col">Watched</th>
 			<th class="right-align" scope="col">Remove</th>
 		</tr>
@@ -17,9 +19,11 @@
 	{% set list_pos.num = list_pos.num + 1 %}
 		<tr id="tr_{{ movie.id }}">
 			<th scope="row">{{ list_pos.num }}</th>
-			<td>{{ movie.title }}</td>
-			<td><input id="checkbox_{{ movie.id }}" type="checkbox" name="done_check" class="custom-check-input"{% if movie.done %} value="1" checked {% endif %}/></td>
-			<td><div id="div_{{ movie.id }}" class="close"><span aria-hidden="true">&times;</span></div></td>
+			<td id="title_{{ movie.id }}">{{ movie.title }}</td>
+			<td id="genre_{{ movie.id }}">{{ movie.genre }}</td>
+			<td id="length_{{ movie.id }}">{{ movie.length }}</td>
+			<td><input id="checkbox_{{ movie.id }}" type="checkbox" name="done_check" class="custom-check-input" onclick="doneMovie( {{ movie.id }} )" {% if movie.done %} value="1" checked {% endif %}/></td>
+			<td><div id="div_{{ movie.id }}" class="close" onclick="deleteMovie( {{ movie.id }} )"><span aria-hidden="true">&times;</span></div></td>
 		</tr>
 	{% endfor %}
 	</tbody>
@@ -27,6 +31,8 @@
 <form method="POST">
 	<div class="input-group">
 		<input type="text" class="form-control" id="movie_title" name="movie_title" placeholder="Movie title">
+		<input type="text" class="form-control" id="movie_genre" name="movie_genre" placeholder="Genre">
+		<input type="text" class="form-control" id="movie_length" name="movie_length" placeholder="Length">
 		<div class="input-group-append">
 			<button class="btn btn-primary" type="submit">Add Movie</button>
 		</div>
