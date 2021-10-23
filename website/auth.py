@@ -60,7 +60,7 @@ def signup_post():
 		db.session.commit()
 		flash( 'Account created!', category = 'success' )
 		return redirect( url_for( 'auth.login_get' ) )
-
+	return render_template( 'signup.html', user = current_user )
 
 
 

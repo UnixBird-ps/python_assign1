@@ -11,8 +11,6 @@ body, html
 	font-size: 16px;
 	width: 100%!important;
 	height: 100%!important;
-	/* user-select: none; */
-	/* -webkit-user-select: none; */
 }
 
 svg.hidden
@@ -51,23 +49,27 @@ img.poster-icon
 	border:1px solid black;
 }
 
-.poster-icon-container
+.changable-container
 {
 	position: relative;
+	display: inline-block;
 }
 
 .change-btn
 {
-	/*position: fixed;*/
 	position: absolute;
-	/*position: relative;*/
-	top: -15px;
-	left: 15px;
+	top: -20px;
+	left: calc( 100% - 5px );
 	display: none;
+	z-index: 5;
 }
 
 img.poster-icon:hover + .change-btn, .change-btn:hover
 {
 	display: inline-block;
-	/*display: block;*/
+}
+
+.changable-attr:hover + .change-btn, .change-btn:hover
+{
+	display: inline-block;
 }

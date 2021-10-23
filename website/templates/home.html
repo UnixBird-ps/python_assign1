@@ -20,19 +20,29 @@
 		<tr id="tr_{{ movie.id }}">
 			<th scope="row">{{ list_pos.num }}</th>
 			<td>
-				<div class="poster-icon-container">
-				<!--div data-bs-toggle="modal" data-bs-target="#modal-poster"-->
-				<!--button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#modal-poster" onclick="updateModalPoster( this )"-->
+				<div class="changable-container">
 					<img class="poster-icon" data-bs-toggle="modal" data-bs-target="#modal-poster" src="{{ movie.img_src }}" onclick="updateModalPoster( this )"/>
-					<!--img class="poster-icon" src="{{ movie.img_src }}" onclick="updateModalPoster( this )"/-->
-				<!--/button-->
 					<button type="button" class="change-btn btn-primary">Change</button>
-					<!--div class="change-btn">Change</div-->
 				</div>
 			</td>
-			<td id="title_{{ movie.id }}">{{ movie.title }}</td>
-			<td id="genre_{{ movie.id }}">{{ movie.genre }}</td>
-			<td id="length_{{ movie.id }}">{{ movie.length }}</td>
+			<td id="title_{{ movie.id }}">
+				<div class="changable-container">
+					<span class="changable-attr">{{ movie.title }}</span>
+					<button type="button" class="change-btn btn-primary">Change</button>
+				</div>
+			</td>
+			<td id="genre_{{ movie.id }}">
+				<div class="changable-container">
+					<span class="changable-attr">{{ movie.genre }}</span>
+					<button type="button" class="change-btn btn-primary">Change</button>
+				</div>
+			</td>
+			<td id="length_{{ movie.id }}">
+				<div class="changable-container">
+					<span class="changable-attr">{{ movie.length }}</span>
+					<button type="button" class="change-btn btn-primary">Change</button>
+				</div>
+			</td>
 			<td><input id="checkbox_{{ movie.id }}" type="checkbox" name="done_check" class="custom-check-input" onclick="doneMovie( {{ movie.id }} )" {% if movie.done %} value="1" checked {% endif %}/></td>
 			<td><div id="div_{{ movie.id }}" class="btn-close float-end" onclick="deleteMovie( {{ movie.id }} )"></div></td>
 		</tr>
