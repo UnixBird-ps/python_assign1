@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 		<title>The Watchlist</title>
 		<!-- script
 			src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -57,14 +57,14 @@
 		</script>
 		<link
 			rel="stylesheet"
+			href="{{ url_for( 'static', filename='style.css' ) }}"
+		/>
+		<link
+			rel="stylesheet"
 			href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css"
 			integrity="sha512-GQGU0fMMi238uA+a/bdWJfpUGKUkBdgfFdgBm72SUQ6BeyWjoY/ton0tEjH+OSH9iP4Dfh+7HM0I9f5eR0L/4w=="
 			crossorigin="anonymous"
 			referrerpolicy="no-referrer"
-		/>
-		<link
-			rel="stylesheet"
-			href="{{ url_for( 'static', filename='style.css' ) }}"
 		/>
 	</head>
 	<body>
@@ -91,17 +91,17 @@
 		{% for category, msg in messages %}
 		{% if category == "error" %}
 		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
 			<span>{{ msg }}</span>
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
 			</button>
 		</div>
 		{% endif %}
 		{% if category == "success" %}
 		<div class="alert alert-success alert-dismissible fade show" role="alert">
+			<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
 			<span>{{ msg }}</span>
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
 			</button>
 		</div>
 		{% endif %}
@@ -114,7 +114,7 @@
 		</div>
 		{% endif %}
 		<br>
-		<div class="container">
+		<div class="container-fluid">
 		{% block content %}
 		{% endblock %}
 		</div>

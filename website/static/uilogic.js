@@ -18,6 +18,7 @@ function deleteMovie( pMovieId )
 }
 
 
+
 function doneMovie( pMovieId )
 {
 	var lTable = document.getElementById( 'movies' );
@@ -32,6 +33,7 @@ function doneMovie( pMovieId )
 }
 
 
+
 function renumTableRows()
 {
 	var lTable = document.getElementById( 'movies' );
@@ -43,4 +45,12 @@ function renumTableRows()
 		var lNumCell = lRow.querySelector ( 'th' );
 		lNumCell.innerHTML = lRowNum;
 	}
+}
+
+
+
+function updateModalPoster( pButton )
+{
+	var lImage = pButton.querySelector( 'img' );
+	document.getElementById( 'big-poster' ).src = lImage.src;
 }

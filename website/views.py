@@ -5,6 +5,7 @@ from . import db
 import json
 
 views = Blueprint( 'views', __name__ )
+app_title = 'The Watchlist'
 
 
 #@app.get( '/' )
@@ -29,7 +30,7 @@ def home_post():
 		db.session.add( new_movie )
 		db.session.commit()
 		flash( 'Movie added!', category = 'success' )
-	return render_template( 'home.html', user = current_user )
+	return render_template( 'home.html', user = current_user, app_title = app_title )
 
 
 
@@ -37,7 +38,7 @@ def home_post():
 @views.get( '/' )
 @login_required
 def home_get():
-	return render_template( 'home.html', user = current_user )
+	return render_template( 'home.html', user = current_user, app_title = app_title )
 
 
 
