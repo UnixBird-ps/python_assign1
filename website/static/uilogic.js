@@ -49,8 +49,9 @@ function renumTableRows()
 
 
 
-function updateModalPoster( pButton )
+function updateModalPoster( pImg )
 {
-	var lImage = pButton.querySelector( 'img' );
-	document.getElementById( 'big-poster' ).src = lImage.src;
+	//var lImage = pButton.querySelector( 'img' );
+	//document.getElementById( 'big-poster' ).src = lImage.src;
+	document.getElementById( 'big-poster' ).src = pImg.src;
 }

@@ -11,7 +11,13 @@ body, html
 	font-size: 16px;
 	width: 100%!important;
 	height: 100%!important;
-	user-select: none;
+	/* user-select: none; */
+	/* -webkit-user-select: none; */
+}
+
+svg.hidden
+{
+	display: none;
 }
 
 span
@@ -33,6 +39,11 @@ div.username
 	color: rgb( 250, 250, 250 );
 }
 
+div.close
+{
+	float: right;
+}
+
 img.poster-icon
 {
 	width: 60px;
@@ -40,14 +51,23 @@ img.poster-icon
 	border:1px solid black;
 }
 
-input.poster-icon
+.poster-icon-container
 {
-	width: 60px;
-	height: 90px;
-	border:1px solid black;
+	position: relative;
 }
 
-div.close
+.change-btn
 {
-	float: right;
+	/*position: fixed;*/
+	position: absolute;
+	/*position: relative;*/
+	top: -15px;
+	left: 15px;
+	display: none;
+}
+
+img.poster-icon:hover + .change-btn, .change-btn:hover
+{
+	display: inline-block;
+	/*display: block;*/
 }
