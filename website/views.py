@@ -73,3 +73,57 @@ def done_movie() :
 			movie.done = movie_done
 			db.session.commit()
 	return jsonify( { } )
+
+
+
+
+#@views.route( '/update-movie-title', methods = [ 'POST' ] )
+@views.post( '/update-movie-title' )
+@login_required
+def update_movie_title() :
+	req_movie = json.loads( request.data )
+	movie_id = req_movie[ 'id' ]
+	movie_title = req_movie[ 'title' ]
+	movie = Movie.query.get( movie_id )
+	if movie :
+		if movie.user_id == current_user.id :
+			print( str( movie.id ) + str( movie.title ) )
+			movie.title = movie_title
+			db.session.commit()
+	return jsonify( { } )
+
+
+
+
+#@views.route( '/update-movie-genre', methods = [ 'POST' ] )
+@views.post( '/update-movie-genre' )
+@login_required
+def update_movie_genre() :
+	req_movie = json.loads( request.data )
+	movie_id = req_movie[ 'id' ]
+	movie_genre = req_movie[ 'genre' ]
+	movie = Movie.query.get( movie_id )
+	if movie :
+		if movie.user_id == current_user.id :
+			print( str( movie.id ) + str( movie.genre ) )
+			movie.genre = movie_genre
+			db.session.commit()
+	return jsonify( { } )
+
+
+
+
+#@views.route( '/update-movie-length', methods = [ 'POST' ] )
+@views.post( '/update-movie-length' )
+@login_required
+def update_movie_length() :
+	req_movie = json.loads( request.data )
+	movie_id = req_movie[ 'id' ]
+	movie_length = req_movie[ 'length' ]
+	movie = Movie.query.get( movie_id )
+	if movie :
+		if movie.user_id == current_user.id :
+			print( str( movie.id ) + str( movie.length ) )
+			movie.length = movie_length
+			db.session.commit()
+	return jsonify( { } )

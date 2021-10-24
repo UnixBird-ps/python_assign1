@@ -9,10 +9,10 @@ function deleteMovie( pMovieId )
 	).then(
 		( _res ) =>
 		{
-			var lTable = document.getElementById( 'movies' );
-			var lTableRow = lTable.querySelector( 'tr#tr_' + pMovieId );
-			lTableRow.remove();
-			renumTableRows();
+			var lList = document.getElementById( 'movies' );
+			var lListItem = lList.querySelector( 'li#li_' + pMovieId );
+			lListItem.remove();
+			//renumTableRows();
 		}
 	);
 }
@@ -21,9 +21,9 @@ function deleteMovie( pMovieId )
 
 function doneMovie( pMovieId )
 {
-	var lTable = document.getElementById( 'movies' );
-	var lTableRow = lTable.querySelector( 'tr#tr_' + pMovieId );
-	var lCheckBox = lTableRow.querySelector ( 'input[id^="checkbox_"' );
+	var lList = document.getElementById( 'movies' );
+	var lListItem = lList.querySelector( 'li#li_' + pMovieId );
+	var lCheckBox = lListItem.querySelector ( 'input[id^="checkbox_"' );
 	fetch( '/done-movie',
 		{
 			method : 'POST',
@@ -34,15 +34,57 @@ function doneMovie( pMovieId )
 
 
 
+function updateTitle( pMovieId, pInputBox )
+{
+	var lTitleStr = pInputBox.value;
+	console.log( pMovieId, lTitleStr );
+	fetch( '/update-movie-title',
+		{
+			method : 'POST',
+			body : JSON.stringify( { id : pMovieId, title : lTitleStr } )
+		}
+	).then( ( _res ) => {} );
+}
+
+
+
+function updateGenre( pMovieId, pInputBox )
+{
+	var lGenreStr = pInputBox.value;
+	console.log( pMovieId, lGenreStr );
+	fetch( '/update-movie-genre',
+		{
+			method : 'POST',
+			body : JSON.stringify( { id : pMovieId, genre : lGenreStr } )
+		}
+	).then( ( _res ) => {} );
+}
+
+
+
+function updateLength( pMovieId, pInputBox )
+{
+	var lLength = pInputBox.value;
+	console.log( pMovieId, lLength );
+	fetch( '/update-movie-length',
+		{
+			method : 'POST',
+			body : JSON.stringify( { id : pMovieId, length : lLength } )
+		}
+	).then( ( _res ) => {} );
+}
+
+
+
 function renumTableRows()
 {
-	var lTable = document.getElementById( 'movies' );
-	var lRows = lTable.querySelectorAll( 'tr[id^="tr_"' );
+	var lList = document.getElementById( 'movies' );
+	var lListItems = lList.querySelectorAll( 'li[id^="li_"' );
 	var lRowNum = 0;
-	for ( let lRow of lRows )
+	for ( let lItem of lListItems )
 	{
 		lRowNum++;
-		var lNumCell = lRow.querySelector ( 'th' );
+		var lNumCell = lItem.querySelector ( 'th' );
 		lNumCell.innerHTML = lRowNum;
 	}
 }
