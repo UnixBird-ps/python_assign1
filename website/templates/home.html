@@ -36,7 +36,7 @@
 					</div>
 					<div class="mb-2"><!--row-->
 						<div class="form-check"><!--col-10 offset-2-->
-							<input id="checkbox_{{ movie.id }}" type="checkbox" name="done_check" class="form-check-input" onclick="doneMovie( {{ movie.id }} )" {% if movie.done %} value="1" checked {% endif %}/>
+							<input id="checkbox_{{ movie.id }}" type="checkbox" name="done_check" class="form-check-input" onclick="doneMovie( {{ movie.id }} )" {% if movie.done %} checked {% endif %}/>
 							<label for="checkbox_{{ movie.id }}" class="form-check-label">Watched</label>
 						</div>
 					</div>
@@ -51,21 +51,13 @@
 		</li>
 	{% endfor %}
 </ul>
-<!--form method="POST">
-	<div class="input-group">
-		<input class="form-control col-3" type="text" id="movie_title" name="movie_title" placeholder="Movie title">
-		<input class="form-control col" type="url" id="movie_img" name="movie_img" placeholder="Poster URL">
-		<input class="form-control col-3" type="text" id="movie_genre" name="movie_genre" placeholder="Genre">
-		<input class="form-control col-1" type="number" id="movie_length" name="movie_length" placeholder="Length">
-		<button class="btn btn-primary text-nowrap col-1" type="submit" value="Add Movie">Add Movie</button>
-	</div>
-</form-->
 <div class="modal" id="modal-poster" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
-  	<div class="modal-content h-100">
+  	<div class="modal-content">
       <!--div class="modal-body"-->
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         <img id="big-poster" data-bs-dismiss="modal" src=""/>
+				<input class="form-control" type="url" id="movie_img" name="movie_img" placeholder="Poster URL">
       <!--/div-->
 		</div>
   </div>
