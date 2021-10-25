@@ -8,9 +8,6 @@ views = Blueprint( 'views', __name__ )
 app_title = 'The Watchlist'
 
 
-#@app.get( '/' )
-#def index():
-#	return render_template( 'home.html' )
 
 
 #@views.route( "/", methods = [ 'GET', 'POST' ] )
@@ -22,7 +19,6 @@ def home_post():
 	form_img_url = request.form.get( 'movie_img' )
 	form_genre = request.form.get( 'movie_genre' )
 	form_length = request.form.get( 'movie_length' )
-	#form_done = request.form.get( 'done_check' )
 	if len( form_title ) < 1 :
 		flash( 'Title is too short!', category = 'error' )
 	else :
@@ -30,14 +26,15 @@ def home_post():
 		db.session.add( new_movie )
 		db.session.commit()
 		flash( 'Movie added!', category = 'success' )
-	return render_template( 'home.html', user = current_user, app_title = app_title )
+	home_get()
+	#return render_template( 'home.html', user = current_user, app_title = app_title )
 
 
 
 
 @views.get( '/' )
 @login_required
-def home_get():
+def home_get() :
 	return render_template( 'home.html', user = current_user, app_title = app_title )
 
 
@@ -54,6 +51,7 @@ def delete_movie() :
 		if movie.user_id == current_user.id :
 			db.session.delete( movie )
 			db.session.commit()
+	# Must return something
 	return jsonify( {} )
 
 
@@ -67,11 +65,10 @@ def done_movie() :
 	movie_id = req_movie[ 'id' ]
 	movie_done = req_movie[ 'done' ]
 	movie = Movie.query.get( movie_id )
-	if movie :
-		if movie.user_id == current_user.id :
-			print( str( movie.id ) + str( movie.done ) )
-			movie.done = movie_done
-			db.session.commit()
+	if movie and movie.user_id == current_user.id:
+		movie.done = movie_done
+		db.session.commit()
+	# Must return something
 	return jsonify( { } )
 
 
@@ -85,11 +82,11 @@ def update_movie_title() :
 	movie_id = req_movie[ 'id' ]
 	movie_title = req_movie[ 'title' ]
 	movie = Movie.query.get( movie_id )
-	if movie :
-		if movie.user_id == current_user.id :
-			print( str( movie.id ) + str( movie.title ) )
-			movie.title = movie_title
-			db.session.commit()
+	if movie and movie.user_id == current_user.id:
+		movie.title = movie_title
+		print( str( movie.id ) + str( movie.title ) )
+		db.session.commit()
+	# Must return something
 	return jsonify( { } )
 
 
@@ -103,11 +100,11 @@ def update_movie_genre() :
 	movie_id = req_movie[ 'id' ]
 	movie_genre = req_movie[ 'genre' ]
 	movie = Movie.query.get( movie_id )
-	if movie :
-		if movie.user_id == current_user.id :
-			print( str( movie.id ) + str( movie.genre ) )
-			movie.genre = movie_genre
-			db.session.commit()
+	if movie and movie.user_id == current_user.id:
+		movie.genre = movie_genre
+		print( str( movie.id ) + str( movie.genre ) )
+		db.session.commit()
+	# Must return something
 	return jsonify( { } )
 
 
@@ -117,13 +114,16 @@ def update_movie_genre() :
 @views.post( '/update-movie-length' )
 @login_required
 def update_movie_length() :
+	"""
+	:return: Empty JSON
+	"""
 	req_movie = json.loads( request.data )
 	movie_id = req_movie[ 'id' ]
 	movie_length = req_movie[ 'length' ]
 	movie = Movie.query.get( movie_id )
-	if movie :
-		if movie.user_id == current_user.id :
-			print( str( movie.id ) + str( movie.length ) )
-			movie.length = movie_length
-			db.session.commit()
+	if movie and movie.user_id == current_user.id:
+		movie.length = movie_length
+		print( str( movie.id ) + str( movie.length ) )
+		db.session.commit()
+	# Must return something
 	return jsonify( { } )
