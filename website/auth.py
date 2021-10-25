@@ -11,26 +11,32 @@ auth = Blueprint( 'auth', __name__ )
 @auth.post( '/login' )
 def login_post() :
 	#if request.method == 'POST' :
+	# Get form data
 	form_email = request.form.get( 'email' )
 	form_password = request.form.get( 'password' )
+	form_remember_me = request.form.get( 'remember_me' )
+	if form_remember_me == 'on' : form_remember_me = True
+	else : form_remember_me = False
+	print( form_remember_me )
+	# Get first user from database matching mail address in the form
 	user = User.query.filter_by( email = form_email ).first()
 	if user :
+		# See if the password from the form matches the password in the database
 		if check_password_hash( user.password, form_password ) :
 			flash( 'Logged in successfully!', category = 'success' )
-			login_user( user, remember = True )
+			login_user( user, remember = form_remember_me )
 			return redirect( url_for( 'views.home_get' ) )
 		else :
 			flash( 'Incorrect password!', category = 'error' )
 	else :
 		flash( 'Email does not exist.', category = 'error' )
-	return  render_template( 'login.html', user = current_user )
+	login_get()
 
 
 
 @auth.get( '/login' )
 def login_get() :
 	return  render_template( 'login.html', user = current_user )
-
 
 
 
@@ -60,12 +66,12 @@ def signup_post():
 		db.session.commit()
 		flash( 'Account created!', category = 'success' )
 		return redirect( url_for( 'auth.login_get' ) )
-	return render_template( 'signup.html', user = current_user )
+	signup_get()
 
 
 
 @auth.get( '/signup' )
-def signup_get():
+def signup_get() :
 	return render_template( 'signup.html', user = current_user )
 
 
