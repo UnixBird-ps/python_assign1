@@ -8,40 +8,31 @@
 	{% set list_pos.num = list_pos.num + 1 %}
 		<li class="list-group-item" id="li_{{ movie.id }}">
 			<div class="row justify-content-center">
-				<div class="col-auto d-inline">
-					<img class="poster-icon" data-bs-toggle="modal" data-bs-target="#modal-poster" src="{{ movie.img_src }}" onclick="updateModalPoster( this )"/>
-					<button type="button" class="change-btn btn-primary">Change</button>
+				<div class="col-auto d-inline g-0 tooltipped">
+					<img class="poster-icon d-inline" data-bs-toggle="modal" data-bs-target="#modal-poster" src="{{ movie.img_src }}" onclick="updateModalPoster( this )" alt="Poster icon" />
+					<div class="tooltiptext unselectable text-nowrap bg-primary text-white">Show bigger poster, change URL</div>
 				</div>
 				<div class="col-6 d-inline">
-					<div class="mb-2 form-floating"><!--row  form-inline-->
-						<!--div class="col-10"-->
-							<input id="input_title_{{ movie.id }}" type="text" class="form-control" placeholder="Title" value="{{ movie.title }}" onfocusout="updateTitle( {{ movie.id }}, this )">
-							<!--button type="button" class="change-btn btn-primary">Change</button-->
-						<!--/div-->
+					<div class="mb-2 form-floating">
+						<input id="input_title_{{ movie.id }}" type="text" class="form-control" placeholder="Title" value="{{ movie.title }}" onfocusout="updateTitle( {{ movie.id }}, this )">
 						<label for="input_title_{{ movie.id }}">Title:</label>
 					</div>
-					<div class="mb-2 form-floating"><!--row  form-inline-->
-						<!--div class="col-10"-->
+					<div class="mb-2 form-floating">
 							<input id="input_genre_{{ movie.id }}" type="text" class="form-control" placeholder="Genre" value="{{ movie.genre }}" onfocusout="updateGenre( {{ movie.id }}, this )">
-							<!--button type="button" class="change-btn btn-primary">Change</button-->
-						<!--/div-->
 						<label for="input_genre_{{ movie.id }}">Genre:</label>
 					</div>
-					<div class="mb-2 form-floating"><!--row  form-inline-->
-						<!--div class="col-10"-->
-							<input id="input_length_{{ movie.id }}" type="number" class="form-control" placeholder="Length: (Minutes)" value="{{ movie.length }}" onfocusout="updateLength( {{ movie.id }}, this )">
-							<!--button type="button" class="change-btn btn-primary">Change</button-->
-						<!--/div-->
+					<div class="mb-2 form-floating">
+						<input id="input_length_{{ movie.id }}" type="number" class="form-control" placeholder="Length: (Minutes)" value="{{ movie.length }}" onfocusout="updateLength( {{ movie.id }}, this )">
 						<label for="input_length_{{ movie.id }}">Length: (Minutes)</label>
 					</div>
-					<div class="mb-2"><!--row-->
-						<div class="form-check"><!--col-10 offset-2-->
+					<div class="mb-2">
+						<div class="form-check">
 							<input id="checkbox_{{ movie.id }}" type="checkbox" name="done_check" class="form-check-input" onclick="doneMovie( {{ movie.id }} )" {% if movie.done %} checked {% endif %}/>
 							<label for="checkbox_{{ movie.id }}" class="form-check-label">Watched</label>
 						</div>
 					</div>
-					<div class="mb-2"><!--row-->
-						<div class="input-control"><!--col-10 offset-2-->
+					<div class="mb-2">
+						<div class="input-control">
 							<input id="delete_{{ movie.id }}" type="button" class="btn-close" onclick="deleteMovie( {{ movie.id }} )"/>
 							<label for="delete_{{ movie.id }}" class="custom-form-label">Remove</label>
 						</div>
@@ -54,11 +45,13 @@
 <div class="modal" id="modal-poster" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
   	<div class="modal-content">
-      <!--div class="modal-body"-->
+      <div class="modal-header">
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        <img id="big-poster" data-bs-dismiss="modal" src=""/>
-				<input class="form-control" type="url" id="movie_img" name="movie_img" placeholder="Poster URL">
-      <!--/div-->
+      </div>
+      <div class="modal-body">
+        <img id="big-poster" class="img-fluid" data-bs-dismiss="modal" src="" alt="Big modal poster"/>
+				<input id="movie_img" class="form-control" type="url" name="movie_img" placeholder="Poster URL">
+      </div>
 		</div>
   </div>
 </div>
