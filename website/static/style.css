@@ -1,3 +1,6 @@
+/*
+Make all elements tight
+*/
 *
 {
 	margin: 0;
@@ -5,6 +8,10 @@
 	box-sizing: border-box;
 }
 
+/*
+Sett font and text size
+Use all available space
+*/
 body, html
 {
 	font-family: Trebuchet MS, Arial, sans-serif;
@@ -13,6 +20,9 @@ body, html
 	height: 100%!important;
 }
 
+/*
+Some parts should be unselectable
+*/
 .unselectable
 {
 	-webkit-user-select: none;  /* Chrome all / Safari all */
@@ -25,12 +35,12 @@ svg.hidden
 {
 	display: none;
 }
-
+/*
 span
 {
 	background: transparent;
 }
-
+*/
 th.right-align
 {
 	text-align: right;
@@ -55,36 +65,42 @@ div.close
 	float: right;
 }
 
-img.poster-icon
+.poster-icon
 {
 	width: 160px;
 	height: 240px;
 	border:1px solid black;
 }
 
-.changable-container
+.tooltipped
 {
 	position: relative;
 	display: inline-block;
 }
 
-.change-btn
+/*
+Make all elements of class tooltiptext initially invisible
+Set position to hover just above top right corner of hovered element
+*/
+.tooltipped .tooltiptext
 {
+	visibility: hidden;
+	text-align: center;
+	padding: 4px 8px;
+	border-radius: 2px;
 	position: absolute;
 	top: -20px;
-	left: -5px;/*calc( 100% - 5px );*/
-	display: none;
-	z-index: 5;
+	left: calc( 100% - 15px );
+	z-index: 1;
 }
 
-img.poster-icon:hover + .change-btn, .change-btn:hover
+/*
+Change visibility for elements of class tooltiptext
+when pointer is hovering on a HTML element of class tooltipped
+*/
+.tooltipped:hover .tooltiptext, .tooltiptext:hover
 {
-	display: inline;
-}
-
-.changable-attr:hover + .change-btn, .change-btn:hover
-{
-	display: inline-block;
+	visibility: visible;
 }
 
 .textbox-size
