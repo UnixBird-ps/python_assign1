@@ -7,14 +7,13 @@ from flask_login import login_user, login_required, logout_user, current_user
 auth = Blueprint( 'auth', __name__ )
 
 
-#@auth.route( '/login', methods = [ 'GET', 'POST' ] )
 @auth.post( '/login' )
 def login_post() :
-	#if request.method == 'POST' :
 	# Get form data
 	form_email = request.form.get( 'email' )
 	form_password = request.form.get( 'password' )
 	form_remember_me = request.form.get( 'remember_me' )
+	# Translate remember_me checkbox's state to boolean
 	if form_remember_me == 'on' : form_remember_me = True
 	else : form_remember_me = False
 	print( form_remember_me )
@@ -40,33 +39,48 @@ def login_get() :
 
 
 
-#@auth.route( '/signup', methods=[ 'GET', 'POST' ] )
+
 @auth.post( '/signup' )
 def signup_post():
-	#if request.method == 'POST' :
+	"""
+	Reads form data that was sent from the webpage
+	Checks if data was valid
+	Registers user in the database
+	Redirects the user to propper webpage
+	:return:
+	"""
+	# Get form data
 	form_email = request.form.get( 'email' )
 	form_first_name = request.form.get( 'firstname' )
 	form_password1 = request.form.get( 'password1' )
 	form_password2 = request.form.get( 'password2' )
-
+	# Find first user in the database matching mail address in the form
 	user = User.query.filter_by( email = form_email ).first()
+	# See if form data is valid
 	if user :
+		# Account is already present
 		flash( 'Email already exists.', category = 'error' )
-	elif len( form_email ) < 4 :
+	elif len( form_email ) < 5 :
 		flash( 'Email must be greater than 3 characters.', category = 'error' )
 	elif len( form_first_name ) < 2 :
 		flash( 'First name must be greater than 1 character.', category = 'error' )
-	elif form_password1 != form_password2 :
-		flash( 'Passwords don\'t match.', category = 'error' )
 	elif len( form_password1 ) < 7 :
 		flash( 'Password must be at least 7 characters.', category = 'error' )
+	elif form_password1 != form_password2 :
+		flash( 'Passwords don\'t match.', category = 'error' )
 	else :
+		# Signup attempt was successful
+		# Create the user object
 		new_user = User( email = form_email, first_name = form_first_name, password=generate_password_hash( form_password1, method = 'sha256' ) )
+		# Register the user in the database
 		db.session.add( new_user )
 		db.session.commit()
 		flash( 'Account created!', category = 'success' )
+		# Redirect user to login page
 		return redirect( url_for( 'auth.login_get' ) )
+	# Call get method because signup was unsuccessful, let the user retry
 	signup_get()
+
 
 
 
@@ -77,7 +91,6 @@ def signup_get() :
 
 
 
-#@auth.route( '/logout' )
 @auth.get( '/logout' )
 @login_required
 def logout_get() :
