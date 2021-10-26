@@ -36,16 +36,11 @@ svg.hidden
 	display: none;
 }
 /*
-span
-{
-	background: transparent;
-}
-*/
 th.right-align
 {
 	text-align: right;
 }
-
+*/
 div.right-corner-container
 {
 	z-index: 5;
@@ -86,10 +81,10 @@ Set position to hover just above top right corner of hovered element
 {
 	visibility: hidden;
 	text-align: center;
-	padding: 4px 8px;
+	padding: 3px 8px;
 	border-radius: 2px;
 	position: absolute;
-	top: -20px;
+	top: -15px;
 	left: calc( 100% - 15px );
 	z-index: 1;
 }
