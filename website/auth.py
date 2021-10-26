@@ -9,6 +9,11 @@ auth = Blueprint( 'auth', __name__ )
 
 @auth.post( '/login' )
 def login_post() :
+	"""
+	Reads form data that was sent from the webpage
+	Redirects the user to propper webpage
+	:return: If login was successful a HTTP redirect response to the home page, or the login page again
+	"""
 	# Get form data
 	form_email = request.form.get( 'email' )
 	form_password = request.form.get( 'password' )
@@ -16,7 +21,6 @@ def login_post() :
 	# Translate remember_me checkbox's state to boolean
 	if form_remember_me == 'on' : form_remember_me = True
 	else : form_remember_me = False
-	print( form_remember_me )
 	# Get first user from database matching mail address in the form
 	user = User.query.filter_by( email = form_email ).first()
 	if user :
@@ -35,6 +39,10 @@ def login_post() :
 
 @auth.get( '/login' )
 def login_get() :
+	"""
+	Shows the login page
+	:return: The login page using a Flask template
+	"""
 	return  render_template( 'login.html', user = current_user )
 
 
@@ -47,7 +55,7 @@ def signup_post():
 	Checks if data was valid
 	Registers user in the database
 	Redirects the user to propper webpage
-	:return:
+	:return: If successful a HTTP redirect response to the login page, or the signup page again
 	"""
 	# Get form data
 	form_email = request.form.get( 'email' )
@@ -78,7 +86,7 @@ def signup_post():
 		flash( 'Account created!', category = 'success' )
 		# Redirect user to login page
 		return redirect( url_for( 'auth.login_get' ) )
-	# Call get method because signup was unsuccessful, let the user retry
+	# Call get method again because signup was unsuccessful, let the user retry
 	signup_get()
 
 
@@ -86,6 +94,10 @@ def signup_post():
 
 @auth.get( '/signup' )
 def signup_get() :
+	"""
+	Shows the signup page
+	:return: The signup page using a Flask template
+	"""
 	return render_template( 'signup.html', user = current_user )
 
 
@@ -94,5 +106,10 @@ def signup_get() :
 @auth.get( '/logout' )
 @login_required
 def logout_get() :
+	"""
+	Logs out the user
+	Redirects the user to login page
+	:return: A HTTP redirect response
+	"""
 	logout_user()
 	return redirect( url_for( 'auth.login_get' ) )
