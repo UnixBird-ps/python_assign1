@@ -4,7 +4,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
 
+
+
+
+# Create a Flask blueprint, attach this module to it
 auth = Blueprint( 'auth', __name__ )
+
+
 
 
 @auth.post( '/login' )
@@ -26,14 +32,17 @@ def login_post() :
 	if user :
 		# See if the password from the form matches the password in the database
 		if check_password_hash( user.password, form_password ) :
+			# Login attempt was successful
 			flash( 'Logged in successfully!', category = 'success' )
 			login_user( user, remember = form_remember_me )
+			# Redirect user to home page
 			return redirect( url_for( 'views.home_get' ) )
 		else :
 			flash( 'Incorrect password!', category = 'error' )
 	else :
 		flash( 'Email does not exist.', category = 'error' )
-	login_get()
+	# Call the get method because login was unsuccessful, let the user retry
+	return login_get()
 
 
 
@@ -87,7 +96,7 @@ def signup_post():
 		# Redirect user to login page
 		return redirect( url_for( 'auth.login_get' ) )
 	# Call get method again because signup was unsuccessful, let the user retry
-	signup_get()
+	return signup_get()
 
 
 
