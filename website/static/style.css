@@ -5,7 +5,11 @@ Make all elements tight
 {
 	margin: 0;
 	padding: 0;
-	box-sizing: border-box;
+}
+
+body
+{
+	padding-top: 55px
 }
 
 /*
@@ -41,15 +45,13 @@ th.right-align
 	text-align: right;
 }
 */
-div.right-corner-container
+.right-corner-container
 {
-	z-index: 5;
-	position: absolute;
-	top: 9px;
-	right: 10px;
+	z-index: 2000;
+	position: relative;
 }
 
-div.username
+.username
 {
 	color: rgb( 250, 250, 250 );
 	display: inline-block;
