@@ -41,7 +41,7 @@ def home_post():
 		db.session.commit()
 		flash( 'Movie added!', category = 'success' )
 	# Show the home page
-	home_get()
+	return home_get()
 
 
 
