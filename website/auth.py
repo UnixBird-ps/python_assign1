@@ -1,15 +1,13 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db
+from . import db, app_title
 from flask_login import login_user, login_required, logout_user, current_user
-
 
 
 
 # Create a Flask blueprint, attach this module to it
 auth = Blueprint( 'auth', __name__ )
-
 
 
 
@@ -52,8 +50,7 @@ def login_get() :
 	Shows the login page
 	:return: The login page using a Flask template
 	"""
-	return  render_template( 'login.html', user = current_user )
-
+	return  render_template( 'login.html', user = current_user, app_title = app_title )
 
 
 
@@ -100,15 +97,13 @@ def signup_post():
 
 
 
-
 @auth.get( '/signup' )
 def signup_get() :
 	"""
 	Shows the signup page
 	:return: The signup page using a Flask template
 	"""
-	return render_template( 'signup.html', user = current_user )
-
+	return render_template( 'signup.html', user = current_user, app_title = app_title )
 
 
 
