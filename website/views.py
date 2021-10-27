@@ -186,3 +186,27 @@ def update_movie_length() :
 		db.session.commit()
 	# Must return something
 	return jsonify( { } )
+
+
+
+
+@views.post( '/update-poster' )
+@login_required
+def update_movie_poster() :
+	"""
+	This function updates the poster image url for a movie with a matching id
+	Reads JSON data that was sent
+	Updates the database if a movie matching the id in the JSON was found
+	:return: Empty JSON
+	"""
+	# Get JSON data that was sent
+	req_movie = json.loads( request.data )
+	movie_id = req_movie[ 'id' ]
+	movie_poster_url = req_movie[ 'poster_url' ]
+	# Find first movie in the database matching the id
+	movie = Movie.query.get( movie_id )
+	if movie and movie.user_id == current_user.id:
+		movie.img_src = movie_poster_url
+		db.session.commit()
+	# Must return something
+	return jsonify( { } )
