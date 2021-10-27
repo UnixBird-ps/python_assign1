@@ -1,17 +1,13 @@
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
 from .models import Movie
-from . import db
+from . import db, app_title
 import json
 
 
 
-
-app_title = 'The Watchlist'
-
 # Create a Flask blueprint, attach this module to it
 views = Blueprint( 'views', __name__ )
-
 
 
 
@@ -45,7 +41,6 @@ def home_post():
 
 
 
-
 @views.get( '/' )
 @login_required
 def home_get() :
@@ -54,7 +49,6 @@ def home_get() :
 	:return: The home HTML page using a Flask template
 	"""
 	return render_template( 'home.html', user = current_user, app_title = app_title )
-
 
 
 
@@ -83,7 +77,6 @@ def delete_movie() :
 
 
 
-
 @views.post( '/done-movie' )
 @login_required
 def done_movie() :
@@ -106,7 +99,6 @@ def done_movie() :
 		db.session.commit()
 	# Must return something
 	return jsonify( { } )
-
 
 
 
@@ -136,7 +128,6 @@ def update_movie_title() :
 
 
 
-
 @views.post( '/update-movie-genre' )
 @login_required
 def update_movie_genre() :
@@ -163,7 +154,6 @@ def update_movie_genre() :
 
 
 
-
 @views.post( '/update-movie-length' )
 @login_required
 def update_movie_length() :
@@ -186,7 +176,6 @@ def update_movie_length() :
 		db.session.commit()
 	# Must return something
 	return jsonify( { } )
-
 
 
 
