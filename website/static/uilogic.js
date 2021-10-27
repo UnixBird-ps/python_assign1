@@ -37,7 +37,6 @@ function doneMovie( pMovieId )
 function updateTitle( pMovieId, pInputBox )
 {
 	var lTitleStr = pInputBox.value;
-	console.log( pMovieId, lTitleStr );
 	fetch( '/update-movie-title',
 		{
 			method : 'POST',
@@ -51,7 +50,6 @@ function updateTitle( pMovieId, pInputBox )
 function updateGenre( pMovieId, pInputBox )
 {
 	var lGenreStr = pInputBox.value;
-	console.log( pMovieId, lGenreStr );
 	fetch( '/update-movie-genre',
 		{
 			method : 'POST',
@@ -65,7 +63,6 @@ function updateGenre( pMovieId, pInputBox )
 function updateLength( pMovieId, pInputBox )
 {
 	var lLength = pInputBox.value;
-	console.log( pMovieId, lLength );
 	fetch( '/update-movie-length',
 		{
 			method : 'POST',
@@ -91,9 +88,28 @@ function renumTableRows()
 
 
 
-function updateModalPoster( pImg )
+
+function updateModalPoster( pMovieId, pImg )
 {
-	//var lImage = pButton.querySelector( 'img' );
-	//document.getElementById( 'big-poster' ).src = lImage.src;
-	document.getElementById( 'big-poster' ).src = pImg.src;
+	document.getElementById( 'big_poster' ).src = pImg.src;
+	document.getElementById( 'poster_src' ).value = pImg.src;
+	document.getElementById( 'submit_poster_url' ).outerHTML = `<button id="submit_poster_url" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Update poster" value="Update" onclick="updatePoster( ${pMovieId} )">Update</button>`;
+}
+
+
+
+function updatePoster( pMovieId )
+{
+	fetch( '/update-poster',
+		{
+			method : 'POST',
+			body : JSON.stringify( { id : pMovieId, poster_url : document.getElementById( 'poster_src' ).value } )
+		}
+	).then(
+		( _res ) =>
+		{
+			var lPosterIcon = document.getElementById( 'poster_icon_' + pMovieId );
+			lPosterIcon.src = document.getElementById( 'poster_src' ).value;
+		}
+	);
 }
