@@ -3,10 +3,15 @@ from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
 
+
+
+app_title = 'The Watchlist'
 DB_NAME = 'database.db'
 
 # Init db instance
 db = SQLAlchemy()
+
+
 
 def create_app():
 	"""
