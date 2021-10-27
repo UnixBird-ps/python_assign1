@@ -1,25 +1,37 @@
 {% extends "base.html" %}
 {% block content %}
-<form method="POST">
-	<h3 align="center">Sign Up</h3>
-	<div class="form-group ">
-		<div class="mb-2 form-floating">
-			<input id="email" type="email" class="form-control" name="email" placeholder="Email Address">
-			<label for="email">Email Address</label>
+<h1 class="display-4 unselectable" align="center">{{ app_title }}</h1>
+<div class="container py-2">
+	<div class="row d-flex justify-content-center align-items-center">
+		<div class="col-6 d-none d-md-block"><!-- d-inline-->
+			<img class="img-fluid" alt="Background image" src="/static/background-posters.jpg"/>
 		</div>
-		<div class="mb-2 form-floating">
-			<input id="firstname" type="text" class="form-control" name="firstname" placeholder="First Name">
-			<label for="firstname">First Name</label>
-		</div>
-		<div class="mb-2 form-floating">
-			<input id="password1" type="password" class="form-control" name="password1" placeholder="Password">
-			<label for="password1">Password</label>
-		</div>
-		<div class="mb-2 form-floating">
-			<input id="password2" type="password" class="form-control" name="password2" placeholder="Confirm">
-			<label for="password2">Confirm</label>
+		<div class="col-6 d-flex align-items-center"><!-- d-inline-->
+			<div class="row">
+				<div class="d-flex align-items-center">
+					<span class="h3">Signup</span>
+				</div>
+				<form method="POST">
+					<div class="mb-2 form-floating">
+						<input id="email" type="email" class="form-control" name="email" placeholder="Email Address">
+						<label for="email">Email Address</label>
+					</div>
+					<div class="mb-2 form-floating">
+						<input id="firstname" type="text" class="form-control" name="firstname" placeholder="First Name">
+						<label for="firstname">First Name</label>
+					</div>
+					<div class="mb-2 form-floating">
+						<input id="password1" type="password" class="form-control" name="password1" placeholder="Password">
+						<label for="password1">Password</label>
+					</div>
+					<div class="mb-2 form-floating">
+						<input id="password2" type="password" class="form-control" name="password2" placeholder="Confirm">
+						<label for="password2">Confirm</label>
+					</div>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+			</div>
 		</div>
 	</div>
-	<button type="submit" class="btn btn-primary">Submit</button>
-</form>
+</div>
 {% endblock %}
