@@ -120,7 +120,6 @@ def update_movie_title() :
 	# Was the movie found?
 	if movie and movie.user_id == current_user.id:
 		movie.title = movie_title
-		print( str( movie.id ) + str( movie.title ) )
 		# Register the change in the database
 		db.session.commit()
 	# Must return something
@@ -146,7 +145,6 @@ def update_movie_genre() :
 	# Was the movie found?
 	if movie and movie.user_id == current_user.id:
 		movie.genre = movie_genre
-		print( str( movie.id ) + str( movie.genre ) )
 		# Register the change in the database
 		db.session.commit()
 	# Must return something

@@ -1,35 +1,48 @@
 {% extends "base.html" %}
 {% block content %}
 <h1 class="display-3 unselectable" align="center">{{ app_title }}</h1>
+<!-- Create a list -->
 <ul class="list-group list-group-flush" id="movies">
+	<!-- Create a jinja variable to be used in the for loop -->
+	<!-- Is only used for frontend -->
 	{% set list_pos = namespace( num = 0 ) %}
+	<!-- Loop through all available moovies -->
 	{% for movie in user.movies %}
-	{% set list_pos.num = list_pos.num + 1 %}
+		<!-- Increase the list number -->
+		{% set list_pos.num = list_pos.num + 1 %}
+		<!-- Create a list item -->
 		<li class="list-group-item" id="li_{{ movie.id }}">
 			<div class="row justify-content-center">
+				<!-- Create an image containing the movie poster -->
 				<div class="col-auto d-inline g-0 tooltipped">
 					<img id="poster_icon_{{ movie.id }}" class="poster-icon d-inline" data-bs-toggle="modal" data-bs-target="#modal-poster" src="{{ movie.img_src }}" onclick="updateModalPoster( {{ movie.id }}, this )" alt="Poster icon"/>
 					<div class="tooltiptext unselectable text-nowrap bg-primary text-white">Show bigger poster, change URL</div>
 				</div>
+				<!-- Put movie attributes to the right of the poster icon -->
 				<div class="col-6 d-inline">
+					<!-- Create a label and a textbox for title -->
 					<div class="mb-2 form-floating">
 						<input id="input_title_{{ movie.id }}" type="text" class="form-control" placeholder="Title" value="{{ movie.title }}" onfocusout="updateTitle( {{ movie.id }}, this )">
 						<label for="input_title_{{ movie.id }}">Title:</label>
 					</div>
+					<!-- Create a label and a textbox for genre -->
 					<div class="mb-2 form-floating">
 						<input id="input_genre_{{ movie.id }}" type="text" class="form-control" placeholder="Genre" value="{{ movie.genre }}" onfocusout="updateGenre( {{ movie.id }}, this )">
 						<label for="input_genre_{{ movie.id }}">Genre:</label>
 					</div>
-					<div class="mb-2 form-floating">
+						<!-- Create a label and a textbox for movie length -->
+						<div class="mb-2 form-floating">
 						<input id="input_length_{{ movie.id }}" type="number" class="form-control" placeholder="Length: (Minutes)" value="{{ movie.length }}" onfocusout="updateLength( {{ movie.id }}, this )">
 						<label for="input_length_{{ movie.id }}">Length: (Minutes)</label>
 					</div>
+					<!-- Create a checkbox for marking a movie as watched -->
 					<div class="mb-2">
 						<div class="form-check">
 							<input id="checkbox_{{ movie.id }}" type="checkbox" name="done_check" class="form-check-input" onclick="doneMovie( {{ movie.id }} )" {% if movie.done %} checked {% endif %}>
 							<label for="checkbox_{{ movie.id }}" class="form-check-label">Watched</label>
 						</div>
 					</div>
+					<!-- Create a button for deleting a movie -->
 					<div class="mb-2">
 						<div class="input-control">
 							<input id="delete_{{ movie.id }}" type="button" class="btn-close" onclick="deleteMovie( {{ movie.id }} )">
@@ -41,21 +54,20 @@
 		</li>
 	{% endfor %}
 </ul>
+<!-- Create a modal dialog for displaying a larger movie poster that lets user change the poster url -->
 <div class="modal" id="modal-poster" tabindex="-1">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
-			<!--form id="poster_form" action="/update-poster/" method="POST"--><!---->
-				<div class="d-flex justify-content-end">
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			<div class="d-flex justify-content-end">
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<img id="big_poster" class="img-fluid" data-bs-dismiss="modal" src="" alt="Big modal poster"/>
+				<div class="d-flex">
+					<input id="poster_src" class="form-control" type="url" name="poster_src" placeholder="Poster URL" onfocusout="document.getElementById( 'big_poster' ).src = document.getElementById( 'poster_src' ).value;">
+					<button id="submit_poster_url" type="submit" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Update poster" >Update</button><!--  -->
 				</div>
-				<div class="modal-body">
-					<img id="big_poster" class="img-fluid" data-bs-dismiss="modal" src="" alt="Big modal poster"/>
-					<div class="d-flex">
-						<input id="poster_src" class="form-control" type="url" name="poster_src" placeholder="Poster URL" onfocusout="document.getElementById( 'big_poster' ).src = document.getElementById( 'poster_src' ).value;">
-						<button id="submit_poster_url" type="submit" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Update poster" >Update</button><!--  -->
-					</div>
-				</div>
-			<!--</form-->
+			</div>
 		</div>
 	</div>
 </div>
