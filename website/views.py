@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from .models import Movie
 from . import db, app_title
 import json
+from sqlalchemy.sql import func
 
 
 
@@ -48,7 +49,8 @@ def home_get() :
 	Shows the home page
 	:return: The home HTML page using a Flask template
 	"""
-	return render_template( 'home.html', user = current_user, app_title = app_title )
+	search_result = Movie.query.order_by( Movie.id ).all()
+	return render_template( 'home.html', app_title = app_title, user = current_user, search_result = search_result )
 
 
 
@@ -197,3 +199,23 @@ def update_movie_poster() :
 		db.session.commit()
 	# Must return something
 	return jsonify( { } )
+
+
+
+@views.post( '/search' )
+@login_required
+def search_post() :
+	"""
+	This is used for searching movies on title or genre
+	:return: A list of movies that match
+	"""
+	search_result = []
+	# Get form data
+	form_search_term = request.form.get( 'search_term' )
+	form_search_term = form_search_term.lower()
+	search_result = Movie.query.filter( func.lower( Movie.title ).contains( form_search_term ) ).all()
+	for m_g in Movie.query.filter( func.lower( Movie.genre ).contains( form_search_term ) ).all() :
+		print( m_g )
+		if not m_g in search_result :
+			search_result.append( m_g )
+	return render_template( 'home.html', app_title = app_title, user = current_user, search_result = search_result, query = form_search_term )
