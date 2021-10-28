@@ -1,13 +1,23 @@
 {% extends "base.html" %}
+{% block navbar_content %}
+<!-- Create a New movie button -->
+<button class="btn btn-outline-primary text-nowrap" data-bs-toggle="modal" data-bs-target="#modal-new-movie" value="New Movie">New Movie</button>
+<!-- Display username of currently logged in user -->
+<div class="unselectable username">Logged in as: {{ user.first_name }}</div>
+<form action="/search" method="POST" class="d-flex">
+	<input class="form-control me-2" type="search" name="search_term" value="{{ query }}" placeholder="Search" aria-label="Search">
+	<button class="btn btn-outline-success" type="submit">Search</button>
+</form>
+{% endblock %}
 {% block content %}
-<h1 class="display-3 unselectable" align="center">{{ app_title }}</h1>
+{% if search_result %}
 <!-- Create a list -->
 <ul class="list-group list-group-flush" id="movies">
 	<!-- Create a jinja variable to be used in the for loop -->
 	<!-- Is only used for frontend -->
 	{% set list_pos = namespace( num = 0 ) %}
 	<!-- Loop through all available moovies -->
-	{% for movie in user.movies %}
+	{% for movie in search_result %}
 		<!-- Increase the list number -->
 		{% set list_pos.num = list_pos.num + 1 %}
 		<!-- Create a list item -->
@@ -16,22 +26,22 @@
 				<!-- Create an image containing the movie poster -->
 				<div class="col-auto d-inline g-0 tooltipped">
 					<img id="poster_icon_{{ movie.id }}" class="poster-icon d-inline" data-bs-toggle="modal" data-bs-target="#modal-poster" src="{{ movie.img_src }}" onclick="updateModalPoster( {{ movie.id }}, this )" alt="Poster icon"/>
-					<div class="tooltiptext unselectable text-nowrap bg-primary text-white">Show bigger poster, change URL</div>
+					<div class="tooltiptext unselectable text-nowrap bg-dark text-white">Show bigger poster, change URL</div>
 				</div>
 				<!-- Put movie attributes to the right of the poster icon -->
-				<div class="col-6 d-inline">
+				<div class="col-3 d-inline">
 					<!-- Create a label and a textbox for title -->
-					<div class="mb-2 form-floating">
+					<div class="mb-2 form-floating form-floating-sm">
 						<input id="input_title_{{ movie.id }}" type="text" class="form-control" placeholder="Title" value="{{ movie.title }}" onfocusout="updateTitle( {{ movie.id }}, this )">
-						<label for="input_title_{{ movie.id }}">Title:</label>
+						<label for="input_title_{{ movie.id }}" class="form-label form-label-sm">Title:</label>
 					</div>
 					<!-- Create a label and a textbox for genre -->
-					<div class="mb-2 form-floating">
+					<div class="mb-2 form-floating form-floating-sm">
 						<input id="input_genre_{{ movie.id }}" type="text" class="form-control" placeholder="Genre" value="{{ movie.genre }}" onfocusout="updateGenre( {{ movie.id }}, this )">
 						<label for="input_genre_{{ movie.id }}">Genre:</label>
 					</div>
 						<!-- Create a label and a textbox for movie length -->
-						<div class="mb-2 form-floating">
+						<div class="mb-2 form-floating form-floating-sm">
 						<input id="input_length_{{ movie.id }}" type="number" class="form-control" placeholder="Length: (Minutes)" value="{{ movie.length }}" onfocusout="updateLength( {{ movie.id }}, this )">
 						<label for="input_length_{{ movie.id }}">Length: (Minutes)</label>
 					</div>
@@ -52,8 +62,13 @@
 				</div>
 			</div>
 		</li>
-	{% endfor %}
+{% endfor %}
 </ul>
+{% else %}
+<div class="row justify-content-center">
+	The list is empty / No movies found
+</div>
+{% endif %}
 <!-- Create a modal dialog for displaying a larger movie poster that lets user change the poster url -->
 <div class="modal" id="modal-poster" tabindex="-1">
 	<div class="modal-dialog modal-dialog-centered">
@@ -68,6 +83,43 @@
 					<button id="submit_poster_url" type="submit" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Update poster" >Update</button><!--  -->
 				</div>
 			</div>
+		</div>
+	</div>
+</div>
+<!-- Create a modal dialog for Add Movie -->
+<div class="modal" id="modal-new-movie" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<form method="POST">
+				<div class="modal-header">
+					<h5 class="modal-title">New Movie</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group form-floating">
+						<div class="mb-3 form-floating">
+							<input class="form-control" type="text" id="movie_title" name="movie_title" placeholder="Movie title">
+							<label for="movie_title">Movie title</label>
+						</div>
+						<div class="mb-3 form-floating">
+							<input class="form-control" type="url" id="movie_img" name="movie_img" placeholder="Poster URL">
+							<label for="movie_img">Poster URL</label>
+						</div>
+						<div class="mb-3 form-floating">
+							<input class="form-control" type="text" id="movie_genre" name="movie_genre" placeholder="Genre">
+							<label for="movie_genre">Genre</label>
+						</div>
+						<div class="mb-3 form-floating">
+							<input class="form-control" type="number" id="movie_length" name="movie_length" placeholder="Length (minutes)">
+							<label for="movie_length">Length (minutes)</label>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-secondary" type="button" data-bs-dismiss="modal" aria-label="Cancel" value="Cancel">Cancel</button>
+					<button class="btn btn-primary" type="submit" data-bs-dismiss="modal" aria-label="Add movie" value="Add Movie">Add Movie</button>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>
