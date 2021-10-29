@@ -2,7 +2,7 @@
 {% block navbar_content %}
 <div class="d-flex">
 	<!-- Display username of currently logged in user -->
-	<div class="unselectable username me-1 d-flex align-items-center">
+	<div class="unselectable username me-1">
 		<span class="align-middle text-nowrap">Logged in as: {{ user.first_name }}</span>
 	</div>
 	<!-- Create a New movie button -->
@@ -12,7 +12,7 @@
 	<!-- Create a search form -->
 	<form action="/search" method="POST" class="d-inline-flex">
 		<input class="form-control me-1" type="search" name="search_term" value="{{ query }}" placeholder="Search" aria-label="Search">
-		<button class="btn btn-outline-success" type="submit">Search</button>
+		<!--button class="btn btn-outline-success" type="submit">Search</button-->
 	</form>
 </div>
 {% endblock %}
@@ -30,13 +30,14 @@
 		<!-- Create a list item -->
 		<li class="list-group-item" id="li_{{ movie.id }}">
 			<div class="row justify-content-center">
+				{{ loop.index }}
 				<!-- Create an image containing the movie poster -->
 				<div class="col-auto d-inline g-0 tooltipped">
 					<img id="poster_icon_{{ movie.id }}" class="poster-icon d-inline" data-bs-toggle="modal" data-bs-target="#modal-poster" src="{{ movie.img_src }}" onclick="updateModalPoster( {{ movie.id }}, this )" alt="Poster icon"/>
 					<div class="tooltiptext unselectable text-nowrap bg-dark text-white">Show bigger poster, change URL</div>
 				</div>
 				<!-- Put movie attributes to the right of the poster icon -->
-				<div class="col-3 d-inline">
+				<div class="col">
 					<!-- Create a label and a textbox for title -->
 					<div class="mb-2 form-floating form-floating-sm">
 						<input id="input_title_{{ movie.id }}" type="text" class="form-control" placeholder="Title" value="{{ movie.title }}" onfocusout="updateTitle( {{ movie.id }}, this )">
