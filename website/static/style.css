@@ -7,6 +7,9 @@ Make all elements tight
 	padding: 0;
 }
 
+/*
+Add space on top because the navbar is always on top
+*/
 body
 {
 	padding-top: 55px
@@ -35,6 +38,9 @@ Some parts should be unselectable
 	user-select: none;
 }
 
+/*
+Sombols for Flask flash messages should not be visible initially
+*/
 svg.hidden
 {
 	display: none;
@@ -56,12 +62,12 @@ th.right-align
 	color: rgb( 250, 250, 250 );
 	display: inline-block;
 }
-
+/*
 div.close
 {
 	float: right;
 }
-
+*/
 .poster-icon
 {
 	width: 160px;
@@ -100,7 +106,9 @@ when pointer is hovering on a HTML element of class tooltipped
 	visibility: visible;
 }
 
+/*
 .textbox-size
 {
 	width: 100%;
 }
+*/
