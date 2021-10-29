@@ -41,12 +41,12 @@
 	</head>
 	<body>
 		<nav class="navbar fixed-top navbar-dark bg-dark">
-			<div class="container-fluid d-flex justify-content-start align-items-center gap-2">
+			<div class="container-fluid">
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
 					<span class="navbar-toggler-icon"></span>
 				</button>
-		{% block navbar_content %}
-		{% endblock %}
+				{% block navbar_content %}
+				{% endblock %}
 				<div class="collapse navbar-collapse" id="navbar">
 					<div class="navbar-nav">
 						<!-- This hides/shows menu items depending on if user is logged in or not -->
