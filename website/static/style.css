@@ -1,5 +1,5 @@
 /*
-Make all elements tight
+Make all elements tight default
 */
 *
 {
@@ -16,7 +16,7 @@ body
 }
 
 /*
-Sett font and text size
+Set font and text size
 Use all available space
 */
 body, html
@@ -45,12 +45,7 @@ svg.hidden
 {
 	display: none;
 }
-/*
-th.right-align
-{
-	text-align: right;
-}
-*/
+
 .right-corner-container
 {
 	z-index: 2000;
