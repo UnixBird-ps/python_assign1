@@ -5,6 +5,8 @@
 #Python misc
 /venv
 /app.spec
+/dist
+/build
 __pycache__
 
 # Mac Finder files

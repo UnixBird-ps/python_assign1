@@ -16,7 +16,7 @@
 	</form>
 </div>
 {% endblock %}
-{% block content %}
+{% block page_content %}
 {% if search_result %}
 <!-- Create a list -->
 <ul class="list-group list-group-flush" id="movies">
@@ -40,17 +40,17 @@
 				<div class="col">
 					<!-- Create a label and a textbox for title -->
 					<div class="mb-2 form-floating form-floating-sm">
-						<input id="input_title_{{ movie.id }}" type="text" class="form-control" placeholder="Title" value="{{ movie.title }}" onfocusout="updateTitle( {{ movie.id }}, this )">
+						<input id="input_title_{{ movie.id }}" type="text" class="form-control" placeholder="Title" value="{{ movie.title }}" data-lastvalue="{{ movie.title }}" onfocusout="updateTitle( {{ movie.id }}, this )">
 						<label for="input_title_{{ movie.id }}" class="form-label form-label-sm">Title:</label>
 					</div>
 					<!-- Create a label and a textbox for genre -->
 					<div class="mb-2 form-floating form-floating-sm">
-						<input id="input_genre_{{ movie.id }}" type="text" class="form-control" placeholder="Genre" value="{{ movie.genre }}" onfocusout="updateGenre( {{ movie.id }}, this )">
+						<input id="input_genre_{{ movie.id }}" type="text" class="form-control" placeholder="Genre" value="{{ movie.genre }}" data-lastvalue="{{ movie.genre }}" onfocusout="updateGenre( {{ movie.id }}, this )">
 						<label for="input_genre_{{ movie.id }}">Genre:</label>
 					</div>
 						<!-- Create a label and a textbox for movie length -->
 						<div class="mb-2 form-floating form-floating-sm">
-						<input id="input_length_{{ movie.id }}" type="number" class="form-control" placeholder="Length: (Minutes)" value="{{ movie.length }}" onfocusout="updateLength( {{ movie.id }}, this )">
+						<input id="input_length_{{ movie.id }}" type="number" class="form-control" placeholder="Length: (Minutes)" value="{{ movie.length }}" data-lastvalue="{{ movie.length }}" onfocusout="updateLength( {{ movie.id }}, this )">
 						<label for="input_length_{{ movie.id }}">Length: (Minutes)</label>
 					</div>
 					<!-- Create a checkbox for marking a movie as watched -->
@@ -85,9 +85,9 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<img id="big_poster" class="img-fluid" data-bs-dismiss="modal" src="" alt="Big modal poster"/>
+				<img id="big_poster_img" class="img-fluid" data-bs-dismiss="modal" src="" alt="Big modal poster"/>
 				<div class="d-flex">
-					<input id="poster_src" class="form-control" type="url" name="poster_src" placeholder="Poster URL" onfocusout="document.getElementById( 'big_poster' ).src = document.getElementById( 'poster_src' ).value;">
+					<input id="poster_src" class="form-control" type="url" name="poster_src" placeholder="Poster URL" data-lastvalue="" onfocusout="updateBigPosterUrl( this )">
 					<button id="submit_poster_url" type="submit" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Update poster" >Update</button><!--  -->
 				</div>
 			</div>
