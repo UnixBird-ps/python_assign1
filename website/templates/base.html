@@ -22,7 +22,7 @@
 		<!-- Load our JS for UI events -->
 		<script
 			type="text/javascript"
-			src="{{ url_for( 'static', filename='uilogic.js' ) }}"
+			src="{{ url_for( 'static', filename='uilogic.js' ) }}?u={{ time }}"
 			defer>
 		</script>
 		<!-- Load Bootstrap CSS -->
@@ -45,18 +45,18 @@
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
 					<span class="navbar-toggler-icon"></span>
 				</button>
-				{% block navbar_content %}
-				{% endblock %}
+{% block navbar_content %}
+{% endblock %}
 				<div class="collapse navbar-collapse" id="navbar">
 					<div class="navbar-nav">
 						<!-- This hides/shows menu items depending on if user is logged in or not -->
-						{% if user.is_authenticated %}
+{% if user.is_authenticated %}
 						<!--a class="navbar-item nav-link" id="home" href="/">Home</a-->
 						<a class="navbar-item nav-link" id="logout" href="{{ url_for( 'auth.logout_get' ) }}">Logout</a>
-						{% else %}
+{% else %}
 						<a class="navbar-item nav-link" id="login" href="{{ url_for( 'auth.login_get' ) }}">Login</a>
 						<a class="navbar-item nav-link" id="signup" href="{{ url_for( 'auth.signup_get' ) }}">Sign Up</a>
-						{% endif %}
+{% endif %}
 					</div>
 				</div>
 			</div>
@@ -74,36 +74,36 @@
 	</symbol>
 </svg>
 		<!-- Get all available flash messages using Jinja -->
-		{% with messages = get_flashed_messages( with_categories = true ) %}
+{% with messages = get_flashed_messages( with_categories = true ) %}
 		<!-- Check if there are any flash messages waiting to be displayed -->
-		{% if messages %}
+	{% if messages %}
 		<!-- Loop through available messages -->
 		{% for category, msg in messages %}
 		<!-- Use different color depending on category -->
-		{% if category == "error" %}
+			{% if category == "error" %}
 		<div class="alert alert-danger alert-dismissible fade show" role="alert">
 			<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
 			<span>{{ msg }}</span>
 			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
 			</button>
 		</div>
-		{% endif %}
-		{% if category == "success" %}
+			{% endif %}
+			{% if category == "success" %}
 		<div class="alert alert-success alert-dismissible fade show" role="alert">
 			<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
 			<span>{{ msg }}</span>
 			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
 			</button>
 		</div>
-		{% endif %}
+			{% endif %}
 		{% endfor %}
-		{% endif %}
-		{% endwith %}
-<h1 class="display-3 unselectable" align="center">{{ app_title }}</h1>
+	{% endif %}
+{% endwith %}
+		<h1 class="display-3 unselectable" align="center">{{ app_title }}</h1>
 		<!-- Create a container for pages that extends this template -->
-		<div class="container">
-		{% block content %}
-		{% endblock %}
+		<div class="container-fluid">
+{% block page_content %}
+{% endblock %}
 		</div>
 	</body>
 </html>
