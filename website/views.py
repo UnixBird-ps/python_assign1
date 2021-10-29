@@ -4,7 +4,7 @@ from .models import Movie
 from . import db, app_title
 import json
 from sqlalchemy.sql import func
-
+from time import time_ns
 
 
 # Create a Flask blueprint, attach this module to it
@@ -50,7 +50,7 @@ def home_get() :
 	:return: The home HTML page using a Flask template
 	"""
 	search_result = Movie.query.order_by( Movie.id ).all()
-	return render_template( 'home.html', app_title = app_title, user = current_user, search_result = search_result )
+	return render_template( 'home.html', app_title = app_title, user = current_user, search_result = search_result, time = time_ns()  )
 
 
 
