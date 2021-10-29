@@ -4,6 +4,7 @@
 
 #Python misc
 /venv
+/app.spec
 __pycache__
 
 # Mac Finder files
