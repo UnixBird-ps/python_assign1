@@ -46,26 +46,20 @@ svg.hidden
 	display: none;
 }
 
-.right-corner-container
-{
-	z-index: 2000;
-	position: relative;
-}
-
+/*
+White text
+*/
 .username
 {
 	color: rgb( 250, 250, 250 );
-	display: inline-block;
 }
+
 /*
-div.close
-{
-	float: right;
-}
+Fixed width
 */
 .poster-icon
 {
-	width: 160px;
+	width: 160px !important;
 	height: 240px;
 	border:1px solid black;
 }
@@ -73,7 +67,6 @@ div.close
 .tooltipped
 {
 	position: relative;
-	display: inline-block;
 }
 
 /*
@@ -82,13 +75,15 @@ Set position to hover just above top right corner of hovered element
 */
 .tooltipped .tooltiptext
 {
+	pointer-events: none;
+	font-size: 0.875em;
 	visibility: hidden;
 	text-align: center;
 	padding: 3px 8px;
 	border-radius: 2px;
 	position: absolute;
-	top: -15px;
-	left: calc( 100% - 15px );
+	top: -20px;
+	left: calc( 100% - 10px );
 	z-index: 1;
 }
 
@@ -100,10 +95,3 @@ when pointer is hovering on a HTML element of class tooltipped
 {
 	visibility: visible;
 }
-
-/*
-.textbox-size
-{
-	width: 100%;
-}
-*/
