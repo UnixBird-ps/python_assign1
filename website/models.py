@@ -1,7 +1,7 @@
 from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
-
+from sqlalchemy.ext.orderinglist import ordering_list
 
 
 class Movie( db.Model ) :
@@ -15,6 +15,7 @@ class Movie( db.Model ) :
 	length = db.Column( db.Integer ) # minutes
 	done = db.Column( db.Boolean )
 	date = db.Column( db.DateTime( timezone = True), default = func.now() )
+	position = db.Column( db.Integer )
 	user_id = db.Column( db.Integer, db.ForeignKey( 'user.id' ) )
 
 
@@ -27,4 +28,4 @@ class User( db.Model, UserMixin ) :
 	email = db.Column( db.String( 150 ), unique = True )
 	password = db.Column( db.String( 150 ) )
 	first_name = db.Column( db.String( 150 ) )
-	movies = db.relationship( 'Movie' )
+	movies = db.relationship( 'Movie', order_by = 'Movie.position', collection_class = ordering_list( 'position' ) )
