@@ -33,10 +33,14 @@
 			crossorigin="anonymous"
 			referrerpolicy="no-referrer"
 		/>
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/icon?family=Material+Icons"
+		/>
 		<!-- Load our CSS -->
 		<link
 			rel="stylesheet"
-			href="{{ url_for( 'static', filename='style.css' ) }}"
+			href="{{ url_for( 'static', filename='style.css' ) }}?u={{ time }}"
 		/>
 	</head>
 	<body>
