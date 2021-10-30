@@ -31,6 +31,12 @@
 		<li class="list-group-item" id="li_{{ movie.id }}">
 			<div class="row justify-content-center">
 				{{ loop.index }}
+				<div class="col-auto btn-group btn-group-sm btn-group-vertical">
+					<button class="btn btn-outline-secondary text-nowrap">Move Top</button>
+					<button class="btn btn-outline-secondary text-nowrap">Move Up</button>
+					<button class="btn btn-outline-secondary text-nowrap">Move Down</button>
+					<button class="btn btn-outline-secondary text-nowrap">Move Bottom</button>
+				</div>
 				<!-- Create an image containing the movie poster -->
 				<div class="col-auto d-inline g-0 tooltipped">
 					<img id="poster_icon_{{ movie.id }}" class="poster-icon d-inline" data-bs-toggle="modal" data-bs-target="#modal-poster" src="{{ movie.img_src }}" onclick="updateModalPoster( {{ movie.id }}, this )" alt="Poster icon"/>
@@ -88,7 +94,7 @@
 				<img id="big_poster_img" class="img-fluid" data-bs-dismiss="modal" src="" alt="Big modal poster"/>
 				<div class="d-flex">
 					<input id="poster_src" class="form-control" type="url" name="poster_src" placeholder="Poster URL" data-lastvalue="" onfocusout="updateBigPosterUrl( this )">
-					<button id="submit_poster_url" type="submit" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Update poster" >Update</button><!--  -->
+					<button id="submit_poster_url" type="submit" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Update poster" >Update</button><!--  -->
 				</div>
 			</div>
 		</div>
