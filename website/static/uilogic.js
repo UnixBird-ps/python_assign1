@@ -112,9 +112,7 @@ function updateModalPoster( pMovieId, pImg )
 	document.getElementById( 'big_poster_img' ).src = pImg.src;
 	var lInputBox = document.getElementById( 'poster_src' );
 	lInputBox.value = pImg.src;
-	console.log( lInputBox.dataset.lastvalue );
 	lInputBox.dataset.lastvalue = lInputBox.value;
-	console.log( lInputBox.dataset.lastvalue );
 	document.getElementById( 'submit_poster_url' ).outerHTML = `<button id="submit_poster_url" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Update poster" value="Update" onclick="updateMoviePoster( ${pMovieId} )">Update</button>`;
 }
 
@@ -154,4 +152,44 @@ function updateMoviePoster( pMovieId, pUrl )
 			lPosterIcon.src = lInputBox.value;
 		}
 	);
+}
+
+
+
+/**
+
+*/
+function moveFirst( pMovieId, pListIndex )
+{
+	console.log( 'moveFirst', pMovieId, pListIndex );
+}
+
+
+
+/**
+
+*/
+function moveUp( pMovieId, pListIndex )
+{
+	console.log( 'moveUp', pMovieId, pListIndex );
+}
+
+
+
+/**
+
+*/
+function moveDown( pMovieId, pListIndex )
+{
+	console.log( 'moveDown', pMovieId, pListIndex );
+}
+
+
+
+/**
+
+*/
+function moveLast( pMovieId, pListIndex )
+{
+	console.log( 'moveLast', pMovieId, pListIndex );
 }
