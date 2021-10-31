@@ -20,15 +20,11 @@
 </div>
 {% endblock %}
 {% block page_content %}
-{% if search_result %}
-<div class="justify-content-center" id="movies_container">
+<!--div class="justify-content-center" id="movies_container"-->
 <!-- Create a list -->
 <ul class="list-group list-group-flush" id="movies">
 </ul>
-{% else %}
-	<span>The list is empty / No movies found</span>
-{% endif %}
-</div>
+<!--/div-->
 <!-- Create a modal dialog for displaying a larger movie poster that lets user change the poster url -->
 <div class="modal" id="modal-poster" tabindex="-1">
 	<div class="modal-dialog modal-dialog-centered">

@@ -1,8 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
-from flask_login import LoginManager
-
+from flask_login import LoginManager, current_user
 
 
 app_title = 'The Watchlist'
@@ -46,8 +45,8 @@ def create_app():
 	login_manager.init_app( app )
 
 	@login_manager.user_loader
-	def load_user( user_id ) :
-		return User.query.get( int( user_id ) )
+	def load_user( uid ) :
+		return User.query.get( int( uid ) )
 
 	return app
 

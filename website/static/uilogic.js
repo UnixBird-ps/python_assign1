@@ -19,13 +19,7 @@ function deleteMovie( pMovieId )
 			body : JSON.stringify( { id : pMovieId } )
 		}
 	).then(
-		( _res ) =>
-		{
-			var lList = document.getElementById( 'movies' );
-			var lListItem = lList.querySelector( 'li#li_' + pMovieId );
-			lListItem.remove();
-			//renumTableRows();
-		}
+		_res => { reqMoviesAsHtmlListItems(); }
 	);
 }
 
@@ -45,7 +39,9 @@ function doneMovie( pMovieId )
 			method : 'POST',
 			body : JSON.stringify( { id : pMovieId, done : lCheckBox.checked } )
 		}
-	).then( ( _res ) => {} );
+	).then(
+		_res => {}
+	);
 }
 
 
@@ -67,7 +63,8 @@ function updateTitle( pMovieId, pInputBox )
 				method : 'POST',
 				body : JSON.stringify( { id : pMovieId, title : pInputBox.value } )
 			}
-		).then( ( _res ) =>
+		).then(
+			_res =>
 			{
 				console.log( 'Title was updated' );
 			}
@@ -94,7 +91,8 @@ function updateGenre( pMovieId, pInputBox )
 				method : 'POST',
 				body : JSON.stringify( { id : pMovieId, genre : pInputBox.value } )
 			}
-		).then( ( _res ) =>
+		).then(
+			_res =>
 			{
 				console.log( 'Genre was updated' );
 			}
@@ -121,7 +119,8 @@ function updateLength( pMovieId, pInputBox )
 				method : 'POST',
 				body : JSON.stringify( { id : pMovieId, length : pInputBox.value } )
 			}
-		).then( ( _res ) =>
+		).then(
+			_res =>
 			{
 				console.log( 'Length was updated' );
 			}
@@ -130,7 +129,7 @@ function updateLength( pMovieId, pInputBox )
 }
 
 
-
+/*
 function renumTableRows()
 {
 	var lList = document.getElementById( 'movies' );
@@ -143,7 +142,7 @@ function renumTableRows()
 		lNumCell.innerHTML = lRowNum;
 	}
 }
-
+*/
 
 
 /**
@@ -170,7 +169,7 @@ function updateBigPosterUrl( pInputBox )
 		pInputBox.dataset.lastvalue = pInputBox.value;
 		console.log( 'Poster URL differs' );
 
-		document.getElementById( 'big_poster_img' ).src = pInputBox.value
+		document.getElementById( 'big_poster_img' ).src = pInputBox.value;
 	}
 }
 
@@ -188,7 +187,7 @@ function updateMoviePoster( pMovieId, pUrl )
 			body : JSON.stringify( { id : pMovieId, poster_url : lInputBox.value } )
 		}
 	).then(
-		( _res ) =>
+		_res =>
 		{
 			console.log( 'Poster URL was updated' );
 			var lPosterIcon = document.getElementById( 'poster_icon_' + pMovieId );
@@ -203,24 +202,28 @@ function updateMoviePoster( pMovieId, pUrl )
 */
 function reqMoviesAsHtmlListItems( pQ )
 {
-	var lReqStr = '/search';
+	if ( document.getElementById( 'movies' ) )
+	{
+		var lReqStr = '/search';
 
-	if ( pQ && pQ.toString().length > 0 ) lReqStr += '?q=' + pQ
-	else document.getElementById( 'search_term' ).value = "";
+		if ( pQ && pQ.toString().length > 0 ) { lReqStr += '?q=' + pQ; }
+		else { document.getElementById( 'search_term' ).value = ""; }
 
-	fetch( lReqStr
-	).then(
-		_res =>
-		{
-			_res.text()
-			.then( text =>
-				{
-					var lListElement = document.getElementById( 'movies' );
-					lListElement.innerHTML = text;
-				}
-			);
-		}
-	);
+		fetch( lReqStr
+		).then(
+			_res =>
+			{
+				_res.text()
+				.then(
+					text =>
+					{
+						var lListElement = document.getElementById( 'movies' );
+						lListElement.innerHTML = text;
+					}
+				);
+			}
+		);
+	}
 }
 
 
@@ -255,37 +258,26 @@ function handleSearchChange( pInputBox )
 /**
 
 */
-function moveFirst( pMovieId, pListIndex )
+function arrangeMovie( pMovieId, pListIndex, pPlacement )
 {
-	console.log( 'moveFirst', pMovieId, pListIndex );
-}
+	console.log( pMovieId, pListIndex, pPlacement );
 
-
-
-/**
-
-*/
-function moveUp( pMovieId, pListIndex )
-{
-	console.log( 'moveUp', pMovieId, pListIndex );
-}
-
-
-
-/**
-
-*/
-function moveDown( pMovieId, pListIndex )
-{
-	console.log( 'moveDown', pMovieId, pListIndex );
-}
-
-
-
-/**
-
-*/
-function moveLast( pMovieId, pListIndex )
-{
-	console.log( 'moveLast', pMovieId, pListIndex );
+	fetch( '/arrange',
+		{
+			method : 'POST',
+			body : JSON.stringify( { id : pMovieId, placement : pPlacement } )
+		}
+	).then(
+		_res =>
+		{
+			_res.text()
+			.then(
+				text =>
+				{
+					var lListElement = document.getElementById( 'movies' );
+					lListElement.innerHTML = text;
+				}
+			);
+		}
+	);
 }

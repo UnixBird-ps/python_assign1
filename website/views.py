@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
-from .models import Movie
+from .models import Movie, User
 from . import db, app_title
 import json
 from sqlalchemy.sql import func
@@ -34,7 +34,9 @@ def home_post():
 		# Create new movie object
 		new_movie = Movie( title = form_title, img_src = form_img_url, genre = form_genre, length = form_length, user_id = current_user.id )
 		# Register the movie in the database
-		db.session.add( new_movie )
+		#db.session.add( new_movie )
+		current_user.movies.append( new_movie )
+		#current_user.movies.reorder()
 		db.session.commit()
 		flash( 'Movie added!', category = 'success' )
 	# Show the home page
@@ -49,7 +51,17 @@ def home_get() :
 	Shows the home page
 	:return: The home HTML page using a Flask template
 	"""
-	search_result = Movie.query.order_by( Movie.id ).all()
+	current_user.movies.reorder()
+	db.session.commit()
+
+	search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.position )
+
+	#user = current_user
+	#print( current_user )
+	#user.movies.reorder()
+	print( current_user )
+	for m in current_user.movies :
+		print( m.id, m.title, m.position )
 	return render_template( 'home.html', app_title = app_title, user = current_user, search_result = search_result, time = time_ns()  )
 
 
@@ -71,7 +83,9 @@ def delete_movie() :
 	# Was the movie found?
 	if movie :
 		if movie.user_id == current_user.id :
-			db.session.delete( movie )
+			#db.session.delete( movie )
+			current_user.movies.remove( movie )
+			current_user.movies.reorder()
 			# Register the change in the database
 			db.session.commit()
 	# Must return something
@@ -213,11 +227,40 @@ def search_get() :
 	# Get form data
 	search_term = request.args.get( 'q' )
 	if search_term :
-		search_result = Movie.query.filter( func.lower( Movie.title ).contains( search_term ) ).all()
+		search_result = Movie.query.filter( Movie.user_id == current_user.id, func.lower( Movie.title ).contains( search_term ) ).all()
 		for m_g in Movie.query.filter( func.lower( Movie.genre ).contains( search_term ) ).all() :
 			if not m_g in search_result :
 				search_result.append( m_g )
 	else :
-		search_result = Movie.query.order_by( Movie.id ).all()
+		search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.position )
 
 	return render_template( 'movies.html', search_result = search_result )
+
+
+@views.post( '/arrange' )
+@login_required
+def arrange_post() :
+	json_data = json.loads( request.data )
+	movie_id = json_data.get( 'id' )
+	movie_placement = json_data.get( 'placement' )
+	movie_from_query = Movie.query.get( movie_id )
+
+	match movie_placement :
+		case 'first' :
+			movie = current_user.movies.pop( movie_from_query.position )
+			current_user.movies.insert( 0, movie )
+			current_user.movies.reorder()
+			db.session.commit()
+		case 'up' :
+			print( '' )
+		case 'down' :
+			print( '' )
+		case 'last' :
+			movie = current_user.movies.pop( movie_from_query.position )
+			current_user.movies.append( movie )
+			current_user.movies.reorder()
+			db.session.commit()
+		case _ :
+			print( 'Not allowed!' )
+
+	return render_template( 'movies.html', search_result = current_user.movies )

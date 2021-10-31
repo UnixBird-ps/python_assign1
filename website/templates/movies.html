@@ -1,27 +1,31 @@
 {% if search_result %}
-	<!-- Loop through all available moovies -->
+	{# Loop through all available moovies #}
 	{% for movie in search_result %}
 		<!-- Create a list item -->
 		<li class="list-group-item" id="li_{{ movie.id }}">
 			<div class="row justify-content-center">
 				#{{ loop.index }}
 				<div class="col col-auto px-0">
+					<div class="d-block unselectable tooltipped" onclick="deleteMovie( {{ movie.id }} )">
+						<span class="material-icons">delete_forever</span>
+						<div class="tooltiptext unselectable text-nowrap bg-dark text-white">Remove</div>
+					</div>
 		{% if not loop.first %}
-					<div class="d-block unselectable tooltipped" onclick="moveFirst( {{ movie.id }}, {{ loop.index0 }} )">
+					<div class="d-block unselectable tooltipped" onclick="arrangeMovie( {{ movie.id }}, {{ loop.index0 }}, 'first' )">
 						<span class="material-icons">keyboard_double_arrow_up</span>
 						<div class="tooltiptext unselectable text-nowrap bg-dark text-white">Move to top</div>
 					</div>
-					<div class="d-block unselectable tooltipped" onclick="moveUp( {{ movie.id }}, {{ loop.index0 }} )">
+					<div class="d-block unselectable tooltipped" onclick="arrangeMovie( {{ movie.id }}, {{ loop.index0 }}, 'up' )">
 						<span class="material-icons">keyboard_arrow_up</span>
 						<div class="tooltiptext unselectable text-nowrap bg-dark text-white">Move up</div>
 					</div>
 		{% endif %}
 		{% if not loop.last %}
-					<div class="d-block unselectable tooltipped" onclick="moveDown( {{ movie.id }}, {{ loop.index0 }} )">
+					<div class="d-block unselectable tooltipped" onclick="arrangeMovie( {{ movie.id }}, {{ loop.index0 }}, 'down' )">
 						<span class="material-icons">keyboard_arrow_down</span>
 						<div class="tooltiptext unselectable text-nowrap bg-dark text-white">Move down</div>
 					</div>
-					<div class="d-block unselectable tooltipped" onclick="moveLast( {{ movie.id }}, {{ loop.index0 }} )">
+					<div class="d-block unselectable tooltipped" onclick="arrangeMovie( {{ movie.id }}, {{ loop.index0 }}, 'last' )">
 						<span class="material-icons">keyboard_double_arrow_down</span>
 						<div class="tooltiptext unselectable text-nowrap bg-dark text-white">Move to bottom</div>
 					</div>
@@ -54,11 +58,6 @@
 						<div class="form-check">
 							<input id="checkbox_{{ movie.id }}" type="checkbox" name="done_check" class="form-check-input" onclick="doneMovie( {{ movie.id }} )" {% if movie.done %} checked {% endif %}>
 							<label for="checkbox_{{ movie.id }}">Watched</label>
-						</div>
-					<!-- Create a button for deleting a movie -->
-						<div class="input-control">
-							<input id="delete_{{ movie.id }}" type="button" class="btn-close" onclick="deleteMovie( {{ movie.id }} )">
-							<label for="delete_{{ movie.id }}">Remove</label>
 						</div>
 					</div>
 				</div>
