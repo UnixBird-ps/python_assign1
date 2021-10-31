@@ -10,91 +10,25 @@
 		<button class="btn btn-outline-primary text-nowrap" data-bs-toggle="modal" data-bs-target="#modal-new-movie" value="New Movie">New Movie</button>
 	</div>
 	<!-- Create a search form -->
-	<form action="/search" method="POST" class="d-flex">
-		<input class="form-control me-1" type="search" name="search_term" value="{{ query }}" placeholder="Search" aria-label="Search">
-		<!--button class="btn btn-outline-success" type="submit">Search</button-->
-	</form>
+	<!--form action="/search" method="POST"-->
+	<div class="d-flex">
+		<input class="form-control me-1" type="search" name="search_term" id="search_term" data-lastvalue="" placeholder="Search" aria-label="Search" onchange="handleSearchChange( this )" oninput="handleSearchReset( this)">
+		<button class="btn btn-outline-success me-1" type="submit" onclick="reqMoviesAsHtmlListItems( document.getElementById( 'search_term' ).value )">Search</button>
+		<button class="btn btn-outline-success" type="reset" onclick="reqMoviesAsHtmlListItems()">Reset</button>
+	</div>
+	<!--/form-->
 </div>
 {% endblock %}
 {% block page_content %}
 {% if search_result %}
+<div class="justify-content-center" id="movies_container">
 <!-- Create a list -->
 <ul class="list-group list-group-flush" id="movies">
-	<!-- Create a jinja variable to be used in the for loop -->
-	<!-- Is only used for frontend -->
-	<!-- Loop through all available moovies -->
-	{% for movie in search_result %}
-		<!-- Increase the list number -->
-		<!-- Create a list item -->
-		<li class="list-group-item" id="li_{{ movie.id }}">
-			<div class="row justify-content-center">
-				#{{ loop.index }}
-				<div class="col col-auto px-0">
-		{% if not loop.first %}
-					<div class="d-block unselectable tooltipped" onclick="moveFirst( {{ movie.id }}, {{ loop.index0 }} )">
-						<span class="material-icons">keyboard_double_arrow_up</span>
-						<div class="tooltiptext unselectable text-nowrap bg-dark text-white">Move to top</div>
-					</div>
-					<div class="d-block unselectable tooltipped" onclick="moveUp( {{ movie.id }}, {{ loop.index0 }} )">
-						<span class="material-icons">keyboard_arrow_up</span>
-						<div class="tooltiptext unselectable text-nowrap bg-dark text-white">Move up</div>
-					</div>
-		{% endif %}
-		{% if not loop.last %}
-					<div class="d-block unselectable tooltipped" onclick="moveDown( {{ movie.id }}, {{ loop.index0 }} )">
-						<span class="material-icons">keyboard_arrow_down</span>
-						<div class="tooltiptext unselectable text-nowrap bg-dark text-white">Move down</div>
-					</div>
-					<div class="d-block unselectable tooltipped" onclick="moveLast( {{ movie.id }}, {{ loop.index0 }} )">
-						<span class="material-icons">keyboard_double_arrow_down</span>
-						<div class="tooltiptext unselectable text-nowrap bg-dark text-white">Move to bottom</div>
-					</div>
-		{% endif %}
-				</div>
-				<!-- Create an image containing the movie poster -->
-				<div class="col col-auto d-inline g-0 tooltipped">
-					<img id="poster_icon_{{ movie.id }}" class="poster-icon d-inline" data-bs-toggle="modal" data-bs-target="#modal-poster" src="{{ movie.img_src }}" onclick="updateModalPoster( {{ movie.id }}, this )" alt="Poster icon"/>
-					<div class="tooltiptext unselectable text-nowrap bg-dark text-white">Show bigger poster, change URL</div>
-				</div>
-				<!-- Put movie attributes to the right of the poster icon -->
-				<div class="col">
-					<!-- Create a label and a textbox for title -->
-					<div class="row mb-2 form-floating form-floating-sm">
-						<input id="input_title_{{ movie.id }}" type="text" class="form-control" placeholder="Title" value="{{ movie.title }}" data-lastvalue="{{ movie.title }}" onfocusout="updateTitle( {{ movie.id }}, this )">
-						<label for="input_title_{{ movie.id }}">Title:</label>
-					</div>
-					<!-- Create a label and a textbox for genre -->
-					<div class="row mb-2 form-floating form-floating-sm">
-						<input id="input_genre_{{ movie.id }}" type="text" class="form-control" placeholder="Genre" value="{{ movie.genre }}" data-lastvalue="{{ movie.genre }}" onfocusout="updateGenre( {{ movie.id }}, this )">
-						<label for="input_genre_{{ movie.id }}">Genre:</label>
-					</div>
-						<!-- Create a label and a textbox for movie length -->
-					<div class="row mb-2 form-floating form-floating-sm">
-						<input id="input_length_{{ movie.id }}" type="number" class="form-control" placeholder="Length: (Minutes)" value="{{ movie.length }}" data-lastvalue="{{ movie.length }}" onfocusout="updateLength( {{ movie.id }}, this )">
-						<label for="input_length_{{ movie.id }}">Length: (Minutes)</label>
-					</div>
-					<!-- Create a checkbox for marking a movie as watched -->
-					<div class="row mb-2">
-						<div class="form-check">
-							<input id="checkbox_{{ movie.id }}" type="checkbox" name="done_check" class="form-check-input" onclick="doneMovie( {{ movie.id }} )" {% if movie.done %} checked {% endif %}>
-							<label for="checkbox_{{ movie.id }}">Watched</label>
-						</div>
-					<!-- Create a button for deleting a movie -->
-						<div class="input-control">
-							<input id="delete_{{ movie.id }}" type="button" class="btn-close" onclick="deleteMovie( {{ movie.id }} )">
-							<label for="delete_{{ movie.id }}">Remove</label>
-						</div>
-					</div>
-				</div>
-			</div>
-		</li>
-{% endfor %}
 </ul>
 {% else %}
-<div class="row justify-content-center">
-	The list is empty / No movies found
-</div>
+	<span>The list is empty / No movies found</span>
 {% endif %}
+</div>
 <!-- Create a modal dialog for displaying a larger movie poster that lets user change the poster url -->
 <div class="modal" id="modal-poster" tabindex="-1">
 	<div class="modal-dialog modal-dialog-centered">
