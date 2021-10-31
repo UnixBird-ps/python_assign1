@@ -1,5 +1,16 @@
 
+window.onload = function()
+{
+	reqMoviesAsHtmlListItems();
+}
 
+
+
+/**
+Deletes a movie on the server
+Sends a JSON containing that movie's id
+Updates the list in the browser
+*/
 function deleteMovie( pMovieId )
 {
 	fetch( '/delete-movie',
@@ -20,6 +31,10 @@ function deleteMovie( pMovieId )
 
 
 
+/**
+Marks a movie as watched on the server
+Sends a JSON containing that movie's id and the state of the checkbox to server
+*/
 function doneMovie( pMovieId )
 {
 	var lList = document.getElementById( 'movies' );
@@ -35,55 +50,82 @@ function doneMovie( pMovieId )
 
 
 
+/**
+Updates the title of a movie on the server
+Checks if the value in the input box was changed
+Sends a JSON containing that movie's id and the updated title to server
+*/
 function updateTitle( pMovieId, pInputBox )
 {
 	if ( pInputBox.value != pInputBox.dataset.lastvalue )
 	{
 		pInputBox.dataset.lastvalue = pInputBox.value;
-		console.log( 'Title changed' );
+		console.log( 'Title differs' );
 
 		fetch( '/update-movie-title',
 			{
 				method : 'POST',
 				body : JSON.stringify( { id : pMovieId, title : pInputBox.value } )
 			}
-		).then( ( _res ) => {} );
+		).then( ( _res ) =>
+			{
+				console.log( 'Title was updated' );
+			}
+		);
 	}
 }
 
 
 
+/**
+Updates the genre of a movie on the server
+Checks if the value in the input box was changed
+Sends a JSON containing that movie's id and the updated genre to server
+*/
 function updateGenre( pMovieId, pInputBox )
 {
 	if ( pInputBox.value != pInputBox.dataset.lastvalue )
 	{
 		pInputBox.dataset.lastvalue = pInputBox.value;
-		console.log( 'Genre changed' );
+		console.log( 'Genre differs' );
 
 		fetch( '/update-movie-genre',
 			{
 				method : 'POST',
 				body : JSON.stringify( { id : pMovieId, genre : pInputBox.value } )
 			}
-		).then( ( _res ) => {} );
+		).then( ( _res ) =>
+			{
+				console.log( 'Genre was updated' );
+			}
+		);
 	}
 }
 
 
 
+/**
+Updates the length of a movie on the server
+Checks if the value in the input box was changed
+Sends a JSON containing that movie's id and the updated length to the server
+*/
 function updateLength( pMovieId, pInputBox )
 {
 	if ( pInputBox.value != pInputBox.dataset.lastvalue )
 	{
 		pInputBox.dataset.lastvalue = pInputBox.value;
-		console.log( 'Length changed' );
+		console.log( 'Length differs' );
 
 		fetch( '/update-movie-length',
 			{
 				method : 'POST',
 				body : JSON.stringify( { id : pMovieId, length : pInputBox.value } )
 			}
-		).then( ( _res ) => {} );
+		).then( ( _res ) =>
+			{
+				console.log( 'Length was updated' );
+			}
+		);
 	}
 }
 
@@ -126,7 +168,7 @@ function updateBigPosterUrl( pInputBox )
 	if ( pInputBox.value != pInputBox.dataset.lastvalue )
 	{
 		pInputBox.dataset.lastvalue = pInputBox.value;
-		console.log( 'Poster URL has changed' );
+		console.log( 'Poster URL differs' );
 
 		document.getElementById( 'big_poster_img' ).src = pInputBox.value
 	}
@@ -148,10 +190,64 @@ function updateMoviePoster( pMovieId, pUrl )
 	).then(
 		( _res ) =>
 		{
+			console.log( 'Poster URL was updated' );
 			var lPosterIcon = document.getElementById( 'poster_icon_' + pMovieId );
 			lPosterIcon.src = lInputBox.value;
 		}
 	);
+}
+
+
+
+/**
+*/
+function reqMoviesAsHtmlListItems( pQ )
+{
+	var lReqStr = '/search';
+
+	if ( pQ && pQ.toString().length > 0 ) lReqStr += '?q=' + pQ
+	else document.getElementById( 'search_term' ).value = "";
+
+	fetch( lReqStr
+	).then(
+		_res =>
+		{
+			_res.text()
+			.then( text =>
+				{
+					var lListElement = document.getElementById( 'movies' );
+					lListElement.innerHTML = text;
+				}
+			);
+		}
+	);
+}
+
+
+
+/**
+*/
+function handleSearchReset( pInputBox )
+{
+	//console.log( 'handleSearchReset(... : Search input box differs' );
+	//console.log( 'handleSearchReset(...', pInputBox.value, pInputBox.value.length );
+
+	if ( pInputBox.value != pInputBox.dataset.lastvalue )
+	{
+		if ( pInputBox.dataset.lastvalue.length > 0 && ! pInputBox.value.length > 0 ) reqMoviesAsHtmlListItems();
+		pInputBox.dataset.lastvalue = pInputBox.value;
+	}
+}
+
+
+
+/**
+*/
+function handleSearchChange( pInputBox )
+{
+	console.log( 'handleSearchChange(... : Search input box differs' );
+	console.log( 'handleSearchChange(...', pInputBox.value, pInputBox.value.length );
+	//if ( ! pInputBox.value.length > 0 ) location.replace( '/' );
 }
 
 
