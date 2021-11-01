@@ -1,7 +1,7 @@
 
 window.onload = function()
 {
-	// Update movies list
+	// Populate movies list
 	reqMoviesAsHtmlListItems();
 
 	// Link the submit button's click handler to Enter keyup event of the search input box
@@ -219,8 +219,8 @@ function reqMoviesAsHtmlListItems( pQ )
 		if ( pQ && pQ.toString().length > 0 ) { lReqStr += '?q=' + pQ; }
 		else { document.getElementById( 'search_term' ).value = ""; }
 
-		fetch( lReqStr
-		).then(
+		fetch( lReqStr )
+		.then(
 			_res =>
 			{
 				_res.text()
@@ -257,6 +257,30 @@ function arrangeMovie( pMovieId, pListIndex, pPlacement )
 			body : JSON.stringify( { id : pMovieId, placement : pPlacement } )
 		}
 	).then(
+		_res =>
+		{
+			_res.text()
+			.then(
+				text =>
+				{
+					var lListElement = document.getElementById( 'movies' );
+					lListElement.innerHTML = text;
+				}
+			);
+		}
+	);
+}
+
+
+
+function reqSorted( pSortKey )
+{
+	var lReqStr = '/sort';
+
+	if ( pSortKey && pSortKey.toString().length > 0 ) { lReqStr += '?key=' + pSortKey; }
+
+	fetch( lReqStr )
+	.then(
 		_res =>
 		{
 			_res.text()
