@@ -3,7 +3,7 @@
 	{% for movie in search_result %}
 		<!-- Create a list item -->
 		<li class="list-group-item" id="li_{{ movie.id }}">
-			<div class="row justify-content-center">
+			<div class="row">
 				{# #{{ loop.index }} #}
 				<div class="col col-auto px-0">
 					<div class="d-block unselectable tooltipped" onclick="deleteMovie( {{ movie.id }} )">
@@ -39,24 +39,24 @@
 					<div class="tooltiptext unselectable text-nowrap bg-dark text-white">Show bigger poster, change URL</div>
 				</div>
 				<!-- Put movie attributes to the right of the poster icon -->
-				<div class="col">
+				<div class="col-6">
 					<!-- Create a label and a textbox for title -->
-					<div class="row mb-2 form-floating form-floating-sm">
+					<div class="row mb-2 form-floating">
 						<input id="input_title_{{ movie.id }}" type="text" class="form-control border-0" placeholder="Title" value="{{ movie.title }}" data-lastvalue="{{ movie.title }}" onfocusout="updateTitle( {{ movie.id }}, this )">
 						<label for="input_title_{{ movie.id }}">Title:</label>
 					</div>
 					<!-- Create a label and a textbox for genre -->
-					<div class="row mb-2 form-floating form-floating-sm">
+					<div class="row mb-2 form-floating">
 						<input id="input_genre_{{ movie.id }}" type="text" class="form-control border-0" placeholder="Genre" value="{{ movie.genre }}" data-lastvalue="{{ movie.genre }}" onfocusout="updateGenre( {{ movie.id }}, this )">
 						<label for="input_genre_{{ movie.id }}">Genre:</label>
 					</div>
 						<!-- Create a label and a textbox for movie length -->
-					<div class="row mb-2 form-floating form-floating-sm">
+					<div class="row mb-2 form-floating">
 						<input id="input_length_{{ movie.id }}" type="number" class="form-control border-0" placeholder="Length: (Minutes)" value="{{ movie.length }}" data-lastvalue="{{ movie.length }}" onfocusout="updateLength( {{ movie.id }}, this )">
 						<label for="input_length_{{ movie.id }}">Length: (Minutes)</label>
 					</div>
 					<!-- Create a checkbox for marking a movie as watched -->
-					<div class="row mb-0 px-3">
+					<div class="row mb-0 ps-3">
 						<div class="form-check">
 							<input id="checkbox_{{ movie.id }}" type="checkbox" name="done_check" class="form-check-input" onclick="doneMovie( {{ movie.id }} )" {% if movie.done %} checked {% endif %}>
 							<label for="checkbox_{{ movie.id }}">Watched</label>
