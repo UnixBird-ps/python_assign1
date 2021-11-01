@@ -42,17 +42,17 @@
 				<div class="col">
 					<!-- Create a label and a textbox for title -->
 					<div class="row mb-2 form-floating form-floating-sm">
-						<input id="input_title_{{ movie.id }}" type="text" class="form-control" placeholder="Title" value="{{ movie.title }}" data-lastvalue="{{ movie.title }}" onfocusout="updateTitle( {{ movie.id }}, this )">
+						<input id="input_title_{{ movie.id }}" type="text" class="form-control border-0" placeholder="Title" value="{{ movie.title }}" data-lastvalue="{{ movie.title }}" onfocusout="updateTitle( {{ movie.id }}, this )">
 						<label for="input_title_{{ movie.id }}">Title:</label>
 					</div>
 					<!-- Create a label and a textbox for genre -->
 					<div class="row mb-2 form-floating form-floating-sm">
-						<input id="input_genre_{{ movie.id }}" type="text" class="form-control" placeholder="Genre" value="{{ movie.genre }}" data-lastvalue="{{ movie.genre }}" onfocusout="updateGenre( {{ movie.id }}, this )">
+						<input id="input_genre_{{ movie.id }}" type="text" class="form-control border-0" placeholder="Genre" value="{{ movie.genre }}" data-lastvalue="{{ movie.genre }}" onfocusout="updateGenre( {{ movie.id }}, this )">
 						<label for="input_genre_{{ movie.id }}">Genre:</label>
 					</div>
 						<!-- Create a label and a textbox for movie length -->
 					<div class="row mb-2 form-floating form-floating-sm">
-						<input id="input_length_{{ movie.id }}" type="number" class="form-control" placeholder="Length: (Minutes)" value="{{ movie.length }}" data-lastvalue="{{ movie.length }}" onfocusout="updateLength( {{ movie.id }}, this )">
+						<input id="input_length_{{ movie.id }}" type="number" class="form-control border-0" placeholder="Length: (Minutes)" value="{{ movie.length }}" data-lastvalue="{{ movie.length }}" onfocusout="updateLength( {{ movie.id }}, this )">
 						<label for="input_length_{{ movie.id }}">Length: (Minutes)</label>
 					</div>
 					<!-- Create a checkbox for marking a movie as watched -->
