@@ -38,7 +38,7 @@ def home_post():
 		current_user.movies.append( new_movie )
 		#current_user.movies.reorder()
 		db.session.commit()
-		flash( 'Movie added!', category = 'success' )
+		flash( 'Movie was added!', category = 'success' )
 	# Show the home page
 	return home_get()
 
@@ -173,7 +173,7 @@ def update_movie_genre() :
 @login_required
 def update_movie_length() :
 	"""
-	This function updates the length for a movie with a matching id
+	Updates the length for a movie with a matching id
 	Reads JSON data that was sent
 	Updates the database if a movie matching the id in the JSON was found
 	:return: Empty JSON
@@ -229,7 +229,7 @@ def search_get() :
 	search_term = request.args.get( 'q' )
 	if search_term :
 		search_result = Movie.query.filter( Movie.user_id == current_user.id, func.lower( Movie.title ).contains( search_term ) ).all()
-		for m_g in Movie.query.filter( func.lower( Movie.genre ).contains( search_term ) ).all() :
+		for m_g in Movie.query.filter( Movie.user_id == current_user.id, func.lower( Movie.genre ).contains( search_term ) ).all() :
 			if not m_g in search_result :
 				search_result.append( m_g )
 	else :
@@ -242,6 +242,7 @@ def search_get() :
 @login_required
 def arrange_post() :
 	"""
+	Reads JSON data that was sent
 	"""
 
 	json_data = json.loads( request.data )
