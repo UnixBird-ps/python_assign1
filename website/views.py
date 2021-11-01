@@ -60,8 +60,9 @@ def home_get() :
 	#print( current_user )
 	#user.movies.reorder()
 	print( current_user )
-	for m in current_user.movies :
-		print( m.id, m.title, m.position )
+	sep = ''
+	for m in current_user.movies : print( f'{sep}(p:{m.position} t:{m.title} i:{m.id})', end='' ); sep = ', '
+	print( '' )
 	return render_template( 'home.html', app_title = app_title, user = current_user, search_result = search_result, time = time_ns()  )
 
 
@@ -234,33 +235,45 @@ def search_get() :
 	else :
 		search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.position )
 
-	return render_template( 'movies.html', search_result = search_result )
+	return render_template( 'movies.html', search_result = search_result, query = search_term )
 
 
 @views.post( '/arrange' )
 @login_required
 def arrange_post() :
-	json_data = json.loads( request.data )
-	movie_id = json_data.get( 'id' )
-	movie_placement = json_data.get( 'placement' )
-	movie_from_query = Movie.query.get( movie_id )
+	"""
+	"""
 
-	match movie_placement :
-		case 'first' :
-			movie = current_user.movies.pop( movie_from_query.position )
-			current_user.movies.insert( 0, movie )
-			current_user.movies.reorder()
-			db.session.commit()
-		case 'up' :
-			print( '' )
-		case 'down' :
-			print( '' )
-		case 'last' :
-			movie = current_user.movies.pop( movie_from_query.position )
-			current_user.movies.append( movie )
-			current_user.movies.reorder()
-			db.session.commit()
-		case _ :
-			print( 'Not allowed!' )
+	json_data = json.loads( request.data )
+	movie_placement = json_data.get( 'placement' )
+
+	alts = [ 'first', 'up', 'down', 'last' ]
+	if movie_placement in alts :
+		movie_id = json_data.get( 'id' )
+		qm = Movie.query.get( movie_id )
+
+		print( f'p:{qm.position} t:{qm.title} i:{qm.id}' )
+		print( f'where: {movie_placement}' )
+
+		movie = current_user.movies.pop( qm.position )
+		new_position = qm.position
+
+		match movie_placement :
+			case 'first' :
+				current_user.movies.insert( 0, movie )
+			case 'up' :
+				new_position -= 1
+				if new_position <= 0 : new_position = 0
+				current_user.movies.insert( new_position, movie )
+			case 'down' :
+				new_position += 1
+				current_user.movies.insert( new_position, movie )
+			case 'last' :
+				current_user.movies.append( movie )
+			#case _ :
+				#print( 'Not allowed!' )
+
+		current_user.movies.reorder()
+		db.session.commit()
 
 	return render_template( 'movies.html', search_result = current_user.movies )
