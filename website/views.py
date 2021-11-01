@@ -1,10 +1,11 @@
-from flask import Blueprint, render_template, request, flash, jsonify
+from flask import Blueprint, render_template, request, flash, jsonify, session
 from flask_login import login_required, current_user
 from .models import Movie, User
 from . import db, app_title
 import json
-from sqlalchemy.sql import func
+from sqlalchemy.sql import func, or_
 from time import time_ns
+
 
 
 # Create a Flask blueprint, attach this module to it
@@ -14,7 +15,7 @@ views = Blueprint( 'views', __name__ )
 
 @views.post( '/' )
 @login_required
-def home_post():
+def home_post() :
 	"""
 	Reads form data that was sent from the webpage
 	Validates movie title length that was sent in the form
@@ -54,11 +55,11 @@ def home_get() :
 	current_user.movies.reorder()
 	db.session.commit()
 
+	session[ 'sort_key' ] = ''
+	if session[ 'sort_key' ] : print( session[ 'sort_key' ] )
+
 	search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.position )
 
-	#user = current_user
-	#print( current_user )
-	#user.movies.reorder()
 	print( current_user )
 	sep = ''
 	for m in current_user.movies : print( f'{sep}(p:{m.position} t:{m.title} i:{m.id})', end='' ); sep = ', '
@@ -224,18 +225,56 @@ def search_get() :
 	This is used for searching movies on title or genre
 	:return: HTML list elements containing the movies
 	"""
+	if session[ 'sort_key' ] : print( session[ 'sort_key' ] )
 	search_result = []
 	# Get form data
 	search_term = request.args.get( 'q' )
 	if search_term :
-		search_result = Movie.query.filter( Movie.user_id == current_user.id, func.lower( Movie.title ).contains( search_term ) ).all()
-		for m_g in Movie.query.filter( Movie.user_id == current_user.id, func.lower( Movie.genre ).contains( search_term ) ).all() :
-			if not m_g in search_result :
-				search_result.append( m_g )
+		match session[ 'sort_key' ]:
+			case 'title' :
+				search_result = Movie.query.filter(
+					Movie.user_id == current_user.id,
+					or_(
+						func.lower( Movie.title ).contains( search_term ),
+						func.lower( Movie.genre ).contains( search_term )
+					)
+				).order_by( Movie.title )
+			case 'genre' :
+				search_result = Movie.query.filter(
+					Movie.user_id == current_user.id,
+					or_(
+						func.lower( Movie.title ).contains( search_term ),
+						func.lower( Movie.genre ).contains( search_term )
+					)
+				).order_by( Movie.genre )
+			case 'length' :
+				search_result = Movie.query.filter(
+					Movie.user_id == current_user.id,
+					or_(
+						func.lower( Movie.title ).contains( search_term ),
+						func.lower( Movie.genre ).contains( search_term )
+					)
+				).order_by( Movie.length )
+			case _ :
+				search_result = Movie.query.filter(
+					Movie.user_id == current_user.id,
+					or_(
+						func.lower( Movie.title ).contains( search_term ),
+						func.lower( Movie.genre ).contains( search_term )
+					)
+				).order_by( Movie.position )
 	else :
-		search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.position )
-
+		match session[ 'sort_key' ]:
+			case 'title' :
+				search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.title )
+			case 'genre' :
+				search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.genre )
+			case 'length' :
+				search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.length )
+			case _ :
+				search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.position )
 	return render_template( 'movies.html', search_result = search_result, query = search_term )
+
 
 
 @views.post( '/arrange' )
@@ -244,21 +283,16 @@ def arrange_post() :
 	"""
 	Reads JSON data that was sent
 	"""
-
 	json_data = json.loads( request.data )
 	movie_placement = json_data.get( 'placement' )
-
 	alts = [ 'first', 'up', 'down', 'last' ]
 	if movie_placement in alts :
 		movie_id = json_data.get( 'id' )
 		qm = Movie.query.get( movie_id )
-
 		print( f'p:{qm.position} t:{qm.title} i:{qm.id}' )
 		print( f'where: {movie_placement}' )
-
 		movie = current_user.movies.pop( qm.position )
 		new_position = qm.position
-
 		match movie_placement :
 			case 'first' :
 				current_user.movies.insert( 0, movie )
@@ -273,8 +307,36 @@ def arrange_post() :
 				current_user.movies.append( movie )
 			#case _ :
 				#print( 'Not allowed!' )
-
 		current_user.movies.reorder()
 		db.session.commit()
-
 	return render_template( 'movies.html', search_result = current_user.movies )
+
+
+
+@views.get( '/sort' )
+@login_required
+def sort_get() :
+	"""
+	Used for sorting
+	Takes a query parameter that is used as a sort key
+	:return: A key-sorted list of HTML LI elements containing the movies
+	"""
+	# Get form data
+	new_key = request.args.get( 'key' )
+	old_key = session[ 'sort_key' ]
+	print( f'old key: {old_key}', f'received key: {new_key}' )
+	if new_key : session[ 'sort_key' ] = new_key
+	else : session[ 'sort_key' ] = ''
+	current_key = session[ 'sort_key' ]
+	print( f'current key: {current_key}', f'old key: {old_key}' )
+	search_result = []
+	match new_key:
+		case 'title' :
+			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.title )
+		case 'genre' :
+			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.genre )
+		case 'length' :
+			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.length )
+		case _ :
+			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.position )
+	return render_template( 'movies.html', search_result = search_result, query = new_key )
