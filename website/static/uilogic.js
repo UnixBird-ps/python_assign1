@@ -6,6 +6,18 @@ window.onload = function()
 
 
 
+function constructAlert( pMsg, pCat )
+{
+	var lMsgHTML = '<div class="alert ' + pCat + ' alert-dismissible fade show my-0" role="alert">';
+	lMsgHTML += '<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>';
+	lMsgHTML += '<span>' + pMsg + '</span>';
+	lMsgHTML += '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+	lMsgHTML += '</div>';
+	return lMsgHTML;
+}
+
+
+
 /**
 Deletes a movie on the server
 Sends a JSON containing that movie's id
@@ -56,7 +68,6 @@ function updateTitle( pMovieId, pInputBox )
 	if ( pInputBox.value != pInputBox.dataset.lastvalue )
 	{
 		pInputBox.dataset.lastvalue = pInputBox.value;
-		console.log( 'Title differs' );
 
 		fetch( '/update-movie-title',
 			{
@@ -66,7 +77,8 @@ function updateTitle( pMovieId, pInputBox )
 		).then(
 			_res =>
 			{
-				console.log( 'Title was updated' );
+				var lMsgContainer = document.getElementById( 'message-container' );
+				lMsgContainer.innerHTML += constructAlert( 'Title was updated', 'alert-success' );
 			}
 		);
 	}
@@ -84,7 +96,6 @@ function updateGenre( pMovieId, pInputBox )
 	if ( pInputBox.value != pInputBox.dataset.lastvalue )
 	{
 		pInputBox.dataset.lastvalue = pInputBox.value;
-		console.log( 'Genre differs' );
 
 		fetch( '/update-movie-genre',
 			{
@@ -94,7 +105,8 @@ function updateGenre( pMovieId, pInputBox )
 		).then(
 			_res =>
 			{
-				console.log( 'Genre was updated' );
+				var lMsgContainer = document.getElementById( 'message-container' );
+				lMsgContainer.innerHTML += constructAlert( 'Genre was updated', 'alert-success' );
 			}
 		);
 	}
@@ -112,7 +124,6 @@ function updateLength( pMovieId, pInputBox )
 	if ( pInputBox.value != pInputBox.dataset.lastvalue )
 	{
 		pInputBox.dataset.lastvalue = pInputBox.value;
-		console.log( 'Length differs' );
 
 		fetch( '/update-movie-length',
 			{
@@ -122,31 +133,16 @@ function updateLength( pMovieId, pInputBox )
 		).then(
 			_res =>
 			{
-				console.log( 'Length was updated' );
+				var lMsgContainer = document.getElementById( 'message-container' );
+				lMsgContainer.innerHTML += constructAlert( 'Length was updated', 'alert-success' );
 			}
 		);
 	}
 }
 
 
-/*
-function renumTableRows()
-{
-	var lList = document.getElementById( 'movies' );
-	var lListItems = lList.querySelectorAll( 'li[id^="li_"' );
-	var lRowNum = 0;
-	for ( let lItem of lListItems )
-	{
-		lRowNum++;
-		var lNumCell = lItem.querySelector ( 'th' );
-		lNumCell.innerHTML = lRowNum;
-	}
-}
-*/
-
 
 /**
-
 */
 function updateModalPoster( pMovieId, pImg )
 {
@@ -160,7 +156,6 @@ function updateModalPoster( pMovieId, pImg )
 
 
 /**
-
 */
 function updateBigPosterUrl( pInputBox )
 {
@@ -176,7 +171,6 @@ function updateBigPosterUrl( pInputBox )
 
 
 /**
-
 */
 function updateMoviePoster( pMovieId, pUrl )
 {
@@ -189,9 +183,11 @@ function updateMoviePoster( pMovieId, pUrl )
 	).then(
 		_res =>
 		{
-			console.log( 'Poster URL was updated' );
 			var lPosterIcon = document.getElementById( 'poster_icon_' + pMovieId );
 			lPosterIcon.src = lInputBox.value;
+
+			var lMsgContainer = document.getElementById( 'message-container' );
+			lMsgContainer.innerHTML += constructAlert( 'Poster was updated', 'alert-success' );
 		}
 	);
 }
@@ -232,9 +228,6 @@ function reqMoviesAsHtmlListItems( pQ )
 */
 function handleSearchReset( pInputBox )
 {
-	//console.log( 'handleSearchReset(... : Search input box differs' );
-	//console.log( 'handleSearchReset(...', pInputBox.value, pInputBox.value.length );
-
 	if ( pInputBox.value != pInputBox.dataset.lastvalue )
 	{
 		if ( pInputBox.dataset.lastvalue.length > 0 && ! pInputBox.value.length > 0 ) reqMoviesAsHtmlListItems();
@@ -250,18 +243,14 @@ function handleSearchChange( pInputBox )
 {
 	console.log( 'handleSearchChange(... : Search input box differs' );
 	console.log( 'handleSearchChange(...', pInputBox.value, pInputBox.value.length );
-	//if ( ! pInputBox.value.length > 0 ) location.replace( '/' );
 }
 
 
 
 /**
-
 */
 function arrangeMovie( pMovieId, pListIndex, pPlacement )
 {
-	console.log( pMovieId, pListIndex, pPlacement );
-
 	fetch( '/arrange',
 		{
 			method : 'POST',
