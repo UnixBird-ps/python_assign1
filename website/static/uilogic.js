@@ -1,7 +1,29 @@
 
 window.onload = function()
 {
+	// Update movies list
 	reqMoviesAsHtmlListItems();
+
+	// Link the submit button's click handler to Enter keyup event of the search input box
+	// Get the input field
+	var pInputBox = document.getElementById( 'search_term' );
+	if ( pInputBox )
+	{
+		// Execute a function when the user releases a key on the keyboard
+		pInputBox.addEventListener( 'keyup',
+			event =>
+			{
+				// Number 13 is the "Enter" key on the keyboard
+				if ( event.key === 'Enter' )
+				{
+					// Cancel the default action, if needed
+					event.preventDefault();
+					// Trigger the button element with a click
+					document.getElementById( 'search_submit' ).click();
+				}
+			}
+		);
+	}
 }
 
 
@@ -142,8 +164,6 @@ function updateLength( pMovieId, pInputBox )
 
 
 
-/**
-*/
 function updateModalPoster( pMovieId, pImg )
 {
 	document.getElementById( 'big_poster_img' ).src = pImg.src;
@@ -155,8 +175,6 @@ function updateModalPoster( pMovieId, pImg )
 
 
 
-/**
-*/
 function updateBigPosterUrl( pInputBox )
 {
 	if ( pInputBox.value != pInputBox.dataset.lastvalue )
@@ -170,8 +188,6 @@ function updateBigPosterUrl( pInputBox )
 
 
 
-/**
-*/
 function updateMoviePoster( pMovieId, pUrl )
 {
 	var lInputBox = document.getElementById( 'poster_src' );
@@ -194,8 +210,6 @@ function updateMoviePoster( pMovieId, pUrl )
 
 
 
-/**
-*/
 function reqMoviesAsHtmlListItems( pQ )
 {
 	if ( document.getElementById( 'movies' ) )
@@ -224,8 +238,6 @@ function reqMoviesAsHtmlListItems( pQ )
 
 
 
-/**
-*/
 function handleSearchReset( pInputBox )
 {
 	if ( pInputBox.value != pInputBox.dataset.lastvalue )
@@ -237,18 +249,6 @@ function handleSearchReset( pInputBox )
 
 
 
-/**
-*/
-function handleSearchChange( pInputBox )
-{
-	console.log( 'handleSearchChange(... : Search input box differs' );
-	console.log( 'handleSearchChange(...', pInputBox.value, pInputBox.value.length );
-}
-
-
-
-/**
-*/
 function arrangeMovie( pMovieId, pListIndex, pPlacement )
 {
 	fetch( '/arrange',
