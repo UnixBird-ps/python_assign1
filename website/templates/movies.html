@@ -54,7 +54,7 @@
 						<label for="input_length_{{ movie.id }}">Length: (Minutes)</label>
 					</div>
 					<!-- Create a checkbox for marking a movie as watched -->
-					<div class="row mb-2">
+					<div class="row mb-0 px-3">
 						<div class="form-check">
 							<input id="checkbox_{{ movie.id }}" type="checkbox" name="done_check" class="form-check-input" onclick="doneMovie( {{ movie.id }} )" {% if movie.done %} checked {% endif %}>
 							<label for="checkbox_{{ movie.id }}">Watched</label>
