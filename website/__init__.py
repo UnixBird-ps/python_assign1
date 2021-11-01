@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
-from flask_login import LoginManager, current_user
+from flask_login import LoginManager
 
 
 app_title = 'The Watchlist'
