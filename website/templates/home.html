@@ -1,22 +1,26 @@
 {% extends "base.html" %}
 {% block navbar_content %}
-<div class="d-flex flex-wrap">
+<div class="d-flex flex-wrap form-inline">
 	<!-- Display username of currently logged in user -->
 	<div class="unselectable username me-1">
 		<span class="align-middle text-nowrap">Logged in as: {{ user.first_name }}</span>
 	</div>
 	<!-- Create a New movie button -->
-	<div class="me-1">
+	<div class="me-1 mb-1">
 		<button class="btn btn-outline-primary text-nowrap" data-bs-toggle="modal" data-bs-target="#modal-new-movie" value="New Movie">New Movie</button>
 	</div>
 	<!-- Create a search form -->
-	<!--form action="/search" method="POST"-->
-	<div class="d-flex">
+	<div class="d-flex mb-1">
 		<input class="form-control me-1" type="search" name="search_term" id="search_term" data-lastvalue="" placeholder="Search" aria-label="Search" oninput="handleSearchReset( this)">
 		<button class="btn btn-outline-success me-1" type="submit" id="search_submit" onclick="reqMoviesAsHtmlListItems( document.getElementById( 'search_term' ).value )">Search</button>
 		<button class="btn btn-outline-success" type="reset" onclick="reqMoviesAsHtmlListItems()">Reset</button>
 	</div>
-	<!--/form-->
+</div>
+<div class="d-flex btn-group text-center mt-0">
+	<button class="btn btn-outline-success btn-sm" onclick="reqSorted( '' )">Sort:Off</button>
+	<button class="btn btn-outline-success btn-sm" onclick="reqSorted( 'title' )">Sort:Title</button>
+	<button class="btn btn-outline-success btn-sm" onclick="reqSorted( 'genre' )">Sort:Genre</button>
+	<button class="btn btn-outline-success btn-sm" onclick="reqSorted( 'length' )">Sort:Length</button>
 </div>
 {% endblock %}
 {% block page_content %}
