@@ -370,3 +370,15 @@ def sort_get() :
 		case _ :
 			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.position )
 	return render_template( 'movies.html', search_result = search_result, query = current_key )
+
+
+
+@views.get( '/ui/sort-buttons' )
+@login_required
+def sortbtns_get() :
+	"""
+	Used for UI
+	:return: HTML code describing the sort buttons
+	"""
+	print( session[ 'sort_key' ] )
+	return render_template( 'sortbtns.html', sort_key = session[ 'sort_key' ] )
