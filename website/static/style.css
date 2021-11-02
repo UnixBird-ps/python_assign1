@@ -8,14 +8,6 @@ Make all elements tight default
 }
 
 /*
-Add space on top because the navbar is always on top
-*/
-body
-{
-	padding-top: 55px
-}
-
-/*
 Set font and text size
 Use all available space
 */
