@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from .models import Movie, User
 from . import db, app_title
 import json
-from sqlalchemy.sql import func, or_
+from sqlalchemy.sql import func, or_, desc, asc
 from time import time_ns
 
 
@@ -52,19 +52,24 @@ def home_get() :
 	Shows the home page
 	:return: The home HTML page using a Flask template
 	"""
+	#
 	current_user.movies.reorder()
 	db.session.commit()
 
+	# Init a user's session variable that is used to sort the list
 	session[ 'sort_key' ] = ''
 	if session[ 'sort_key' ] : print( session[ 'sort_key' ] )
 
-	search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.position )
+	# Populate
+	#search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.position )
 
 	print( current_user )
 	sep = ''
 	for m in current_user.movies : print( f'{sep}(p:{m.position} t:{m.title} i:{m.id})', end='' ); sep = ', '
 	print( '' )
-	return render_template( 'home.html', app_title = app_title, user = current_user, search_result = search_result, time = time_ns()  )
+
+	#search_result = search_result,
+	return render_template( 'home.html', app_title = app_title, user = current_user, time = time_ns()  )
 
 
 
@@ -321,22 +326,47 @@ def sort_get() :
 	Takes a query parameter that is used as a sort key
 	:return: A key-sorted list of HTML LI elements containing the movies
 	"""
-	# Get form data
-	new_key = request.args.get( 'key' )
+	# Save current sort key
 	old_key = session[ 'sort_key' ]
-	print( f'old key: {old_key}', f'received key: {new_key}' )
-	if new_key : session[ 'sort_key' ] = new_key
-	else : session[ 'sort_key' ] = ''
-	current_key = session[ 'sort_key' ]
-	print( f'current key: {current_key}', f'old key: {old_key}' )
+	# Get form data
+	received_key = request.args.get( 'key' )
+	print( f'old key: {old_key},  received key: {received_key}' )
+
+	if received_key : new_key = received_key
+	else : new_key = ''
+
+	match new_key :
+		case 'title' :
+			if old_key == 'title' : new_key = 'title_reverse'
+			if old_key == 'title_reverse' : new_key = 'title'
+		case 'genre' :
+			if old_key == 'genre' : new_key = 'genre_reverse'
+			if old_key == 'genre_reverse' : new_key = 'genre'
+		case 'length' :
+			if old_key == 'length' : new_key = 'length_reverse'
+			if old_key == 'length_reverse' : new_key = 'length'
+
+	current_key = new_key
+
+	print( f'current key: {current_key},  old key: {old_key}' )
+
+	# Set session variable sort_key which is used to sort the list
+	session[ 'sort_key' ] = current_key
+
 	search_result = []
-	match new_key:
+	match current_key :
 		case 'title' :
 			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.title )
+		case 'title_reverse' :
+			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( desc( Movie.title ) )
 		case 'genre' :
 			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.genre )
+		case 'genre_reverse' :
+			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( desc( Movie.genre ) )
 		case 'length' :
 			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.length )
+		case 'length_reverse' :
+			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( desc( Movie.length ) )
 		case _ :
 			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.position )
-	return render_template( 'movies.html', search_result = search_result, query = new_key )
+	return render_template( 'movies.html', search_result = search_result, query = current_key )
