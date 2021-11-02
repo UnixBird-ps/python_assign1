@@ -1,33 +1,65 @@
 {% extends "base.html" %}
 {% block navbar_content %}
-<div class="d-flex flex-wrap form-inline">
+<div class="ms-2 me-auto"><!-- pb-1 mb-0 -->
 	<!-- Display username of currently logged in user -->
-	<div class="unselectable username me-1">
-		<span class="align-middle text-nowrap">Logged in as: {{ user.first_name }}</span>
-	</div>
-	<!-- Create a New movie button -->
-	<div class="me-1 mb-1">
-		<button class="btn btn-outline-primary text-nowrap" data-bs-toggle="modal" data-bs-target="#modal-new-movie" value="New Movie">New Movie</button>
-	</div>
-	<!-- Create a search form -->
-	<div class="d-flex mb-1">
-		<input class="form-control me-1" type="search" name="search_term" id="search_term" data-lastvalue="" placeholder="Search" aria-label="Search" oninput="handleSearchReset( this)">
-		<button class="btn btn-outline-success me-1" type="submit" id="search_submit" onclick="reqMoviesAsHtmlListItems( document.getElementById( 'search_term' ).value )">Search</button>
-		<button class="btn btn-outline-success" type="reset" onclick="reqMoviesAsHtmlListItems()">Reset</button>
+	<div class="d-flex float-start unselectable username text-nowrap me-1">
+		<!--span class="text-nowrap"-->Logged in as: {{ user.first_name }}<!--/span-->
 	</div>
 </div>
-<div class="d-flex btn-group text-center mt-0">
-	<button class="btn btn-outline-success btn-sm" onclick="reqSorted( '' )">Sort:Off</button>
-	<button class="btn btn-outline-success btn-sm" onclick="reqSorted( 'title' )">Sort:Title</button>
-	<button class="btn btn-outline-success btn-sm" onclick="reqSorted( 'genre' )">Sort:Genre</button>
-	<button class="btn btn-outline-success btn-sm" onclick="reqSorted( 'length' )">Sort:Length</button>
+<div class="d-flex py-1 mb-0 me-2"><!-- mb-0 -->
+	<!-- Create a New movie button -->
+	<div class="text-center"> <!-- mb-1 -->
+		<button class="btn btn-outline-primary btn-sm text-nowrap" data-bs-toggle="modal" data-bs-target="#modal-new-movie" value="New Movie">New Movie</button>
+	</div>
+</div>
+<div class="d-flex py-1 mb-0 me-2"><!-- mb-0 -->
+	<!-- Create a search form -->
+	<div class="input-group input-group-sm"><!-- mb-1 -->
+		<input class="form-control form-control-sm" type="search" name="search_term" id="search_term" data-lastvalue="" placeholder="Search" aria-label="Search" oninput="handleSearchReset( this)">
+		<button class="btn btn-sm btn-outline-success" type="submit" id="search_submit" onclick="reqMoviesAsHtmlListItems( document.getElementById( 'search_term' ).value )">Search</button>
+		<button class="btn btn-sm btn-outline-success" type="button" onclick="reqMoviesAsHtmlListItems()">Reset</button>
+	</div>
+</div>
+<div class="d-flex py-1 mb-0"><!-- mb-0 -->
+<div class="btn-group btn-group-sm" id="sort-buttons-container"><!-- -->
+{% if sort_key == '' %}
+	<button id="btn_sort_off" class="btn btn-success         btn-sm" onclick="reqSorted( '' )">Sort:Off</button>
+	<button id="btn_sort_title" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'title' )">Sort:Title</button>
+	<button id="btn_sort_genre" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'genre' )">Sort:Genre</button>
+	<button id="btn_sort_length" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'length' )">Sort:Length</button>
+{% endif %}
+{% if sort_key == 'title' %}
+	<button id="btn_sort_off" class="btn btn-outline-success btn-sm" onclick="reqSorted( '' )">Sort:Off</button>
+	<button id="btn_sort_title" class="btn btn-success         btn-sm" onclick="reqSorted( 'title' )">Sort:Title</button>
+	<button id="btn_sort_genre" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'genre' )">Sort:Genre</button>
+	<button id="btn_sort_length" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'length' )">Sort:Length</button>
+{% endif %}
+{% if sort_key == 'genre' %}
+	<button id="btn_sort_off" class="btn btn-outline-success btn-sm" onclick="reqSorted( '' )">Sort:Off</button>
+	<button id="btn_sort_title" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'title' )">Sort:Title</button>
+	<button id="btn_sort_genre" class="btn btn-success         btn-sm" onclick="reqSorted( 'genre' )">Sort:Genre</button>
+	<button id="btn_sort_length" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'length' )">Sort:Length</button>
+{% endif %}
+{% if sort_key == 'length' %}
+	<button id="btn_sort_off" class="btn btn-outline-success btn-sm" onclick="reqSorted( '' )">Sort:Off</button>
+	<button id="btn_sort_title" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'title' )">Sort:Title</button>
+	<button id="btn_sort_genre" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'genre' )">Sort:Genre</button>
+	<button id="btn_sort_length" class="btn btn-success         btn-sm" onclick="reqSorted( 'length' )">Sort:Length</button>
+{% endif %}
+</div>
 </div>
 {% endblock %}
 {% block page_content %}
 <!--div class="justify-content-center" id="movies_container"-->
+{% if search_result %}
 <!-- Create a list -->
 <ul class="list-group list-group-flush" id="movies">
 </ul>
+{% else %}
+<div class="row justify-content-center">
+	The list is empty / No movies found
+</div>
+{% endif %}
 <!--/div-->
 <!-- Create a modal dialog for displaying a larger movie poster that lets user change the poster url -->
 <div class="modal" id="modal-poster" tabindex="-1">
