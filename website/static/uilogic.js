@@ -4,13 +4,26 @@ window.onload = function()
 	// Populate movies list
 	reqMoviesAsHtmlListItems();
 
+	var pE = document.getElementById( 'navbar-container' );
+	//var pTitle = document.getElementById( 'app-title' );
+
+	if ( pE && document.body )
+	{
+		document.body.style.paddingTop = pE.offsetHeight + 'px';
+
+		window.onresize = function()
+		{
+			document.body.style.paddingTop = pE.offsetHeight + 'px';
+		};
+	}
+
 	// Link the submit button's click handler to Enter keyup event of the search input box
 	// Get the input field
-	var pInputBox = document.getElementById( 'search_term' );
-	if ( pInputBox )
+	var lInputBox = document.getElementById( 'search_term' );
+	if ( lInputBox )
 	{
 		// Execute a function when the user releases a key on the keyboard
-		pInputBox.addEventListener( 'keyup',
+		lInputBox.addEventListener( 'keyup',
 			event =>
 			{
 				// Number 13 is the "Enter" key on the keyboard
@@ -289,6 +302,41 @@ function reqSorted( pSortKey )
 				{
 					var lListElement = document.getElementById( 'movies' );
 					lListElement.innerHTML = text;
+
+					var lSortBtnOff    = document.getElementById( 'btn_sort_off'    );
+					var lSortBtnTitle  = document.getElementById( 'btn_sort_title'  );
+					var lSortBtnGenre  = document.getElementById( 'btn_sort_genre'  );
+					var lSortBtnLength = document.getElementById( 'btn_sort_length' );
+
+					if ( pSortKey == '' )
+					{
+						//if ( document.getElementById( 'btn_sort_off' ).className.includes( 'btn-outline-success' ) )
+						lSortBtnOff.className    = lSortBtnOff.className.replace( 'btn-outline-success', 'btn-success' );
+						lSortBtnTitle.className  = lSortBtnTitle.className.replace( 'btn-success', 'btn-outline-success' );
+						lSortBtnGenre.className  = lSortBtnGenre.className.replace( 'btn-success', 'btn-outline-success' );
+						lSortBtnLength.className = lSortBtnLength.className.replace( 'btn-success', 'btn-outline-success' );
+					}
+					if ( pSortKey == 'title' )
+					{
+						lSortBtnOff.className    = lSortBtnOff.className.replace( 'btn-success', 'btn-outline-success' );
+						lSortBtnTitle.className  = lSortBtnTitle.className.replace( 'btn-outline-success', 'btn-success' );
+						lSortBtnGenre.className  = lSortBtnGenre.className.replace( 'btn-success', 'btn-outline-success' );
+						lSortBtnLength.className = lSortBtnLength.className.replace( 'btn-success', 'btn-outline-success' );
+					}
+					if ( pSortKey == 'genre' )
+					{
+						lSortBtnOff.className    = lSortBtnOff.className.replace( 'btn-success', 'btn-outline-success' );
+						lSortBtnTitle.className  = lSortBtnTitle.className.replace( 'btn-success', 'btn-outline-success' );
+						lSortBtnGenre.className  = lSortBtnGenre.className.replace( 'btn-outline-success', 'btn-success' );
+						lSortBtnLength.className = lSortBtnLength.className.replace( 'btn-success', 'btn-outline-success' );
+					}
+					if ( pSortKey == 'length' )
+					{
+						lSortBtnOff.className    = lSortBtnOff.className.replace( 'btn-success', 'btn-outline-success' );
+						lSortBtnTitle.className  = lSortBtnTitle.className.replace( 'btn-success', 'btn-outline-success' );
+						lSortBtnGenre.className  = lSortBtnGenre.className.replace( 'btn-success', 'btn-outline-success' );
+						lSortBtnLength.className = lSortBtnLength.className.replace( 'btn-outline-success', 'btn-success' );
+					}
 				}
 			);
 		}
