@@ -242,6 +242,22 @@ function reqMoviesAsHtmlListItems( pQ )
 					{
 						var lListElement = document.getElementById( 'movies' );
 						lListElement.innerHTML = text;
+
+					fetch( '/ui/sort-buttons' )
+					.then(
+						_res =>
+						{
+							_res.text()
+							.then(
+								text =>
+								{
+									var lSortButtons = document.getElementById( 'sort-buttons-container' );
+									lSortButtons.innerHTML = text;
+								}
+							);
+						}
+					);
+
 					}
 				);
 			}
