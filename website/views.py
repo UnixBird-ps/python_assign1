@@ -35,7 +35,6 @@ def home_post() :
 		# Create new movie object
 		new_movie = Movie( title = form_title, img_src = form_img_url, genre = form_genre, length = form_length, user_id = current_user.id )
 		# Register the movie in the database
-		#db.session.add( new_movie )
 		current_user.movies.append( new_movie )
 		#current_user.movies.reorder()
 		db.session.commit()
@@ -53,23 +52,22 @@ def home_get() :
 	:return: The home HTML page using a Flask template
 	"""
 	#
-	current_user.movies.reorder()
-	db.session.commit()
+	#current_user.movies.reorder()
+	#db.session.commit()
 
-	# Init a user's session variable that is used to sort the list
-	session[ 'sort_key' ] = ''
-	if session[ 'sort_key' ] : print( session[ 'sort_key' ] )
+	# Init a user's session variables that is used to sort or search movies
+	if not 'sort_key' in session : session[ 'sort_key'    ] = ''
+	if not 'search_term' in session : session[ 'search_term' ] = ''
 
 	# Populate
-	#search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.position )
+	search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.position )
 
 	print( current_user )
 	sep = ''
 	for m in current_user.movies : print( f'{sep}(p:{m.position} t:{m.title} i:{m.id})', end='' ); sep = ', '
 	print( '' )
 
-	#search_result = search_result,
-	return render_template( 'home.html', app_title = app_title, user = current_user, time = time_ns()  )
+	return render_template( 'home.html', app_title = app_title, user = current_user, search_result = search_result, sort_key = session[ 'sort_key' ], time = time_ns()  )
 
 
 
@@ -230,11 +228,13 @@ def search_get() :
 	This is used for searching movies on title or genre
 	:return: HTML list elements containing the movies
 	"""
-	if session[ 'sort_key' ] : print( session[ 'sort_key' ] )
+	print( session[ 'sort_key' ] )
+
 	search_result = []
 	# Get form data
 	search_term = request.args.get( 'q' )
 	if search_term :
+		session[ 'search_term' ] = search_term
 		match session[ 'sort_key' ]:
 			case 'title' :
 				search_result = Movie.query.filter(
@@ -278,7 +278,7 @@ def search_get() :
 				search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.length )
 			case _ :
 				search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.position )
-	return render_template( 'movies.html', search_result = search_result, query = search_term )
+	return render_template( 'movies.html', search_result = search_result, query = search_term, sort_key = session[ 'sort_key' ] )
 
 
 
