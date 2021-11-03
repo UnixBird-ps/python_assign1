@@ -7,7 +7,6 @@ class Movie( db.Model ) :
 	"""
 	Holds movie information and a reference to the user that added this object
 	"""
-	#__tablename__ = 'movie'
 	id = db.Column( db.Integer, primary_key = True )
 	img_src = db.Column( db.String( 250 ) )
 	title = db.Column( db.String( 100 ) )
@@ -22,9 +21,8 @@ class Movie( db.Model ) :
 class User( db.Model, UserMixin ) :
 	"""
 	Holds user account information and a reference to movies associated with that account
-	Does reordering of movies automatic
+	Does reordering of movies automatically
 	"""
-	#__tablename__ = 'user'
 	id = db.Column( db.Integer, primary_key = True )
 	email = db.Column( db.String( 150 ), unique = True )
 	password = db.Column( db.String( 150 ) )
