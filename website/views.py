@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, flash, jsonify, session
 from flask_login import login_required, current_user
-from .models import Movie, User
+from .models import Movie
 from . import db, app_title
 import json
-from sqlalchemy.sql import func, or_, desc, asc
+from sqlalchemy.sql import func, or_, desc
 from time import time_ns
 
 
@@ -11,6 +11,82 @@ from time import time_ns
 # Create a Flask blueprint, attach this module to it
 views = Blueprint( 'views', __name__ )
 
+
+def get_movies_from_db() :
+	"""
+	Fetches movies from the database
+	Used by other functions in this module
+	Creates a sorted and filtered list of movies
+	sorted on current session variable sort_key
+	filtered on current session variable search_term
+	:return: An object of type list
+	"""
+	search_result = []
+	match session[ 'sort_key' ] :
+		case 'title' :
+			# Get data from db, search in title and genre
+			search_result = Movie.query.filter(
+				Movie.user_id == current_user.id,
+				or_(
+					func.lower( Movie.title ).contains( session[ 'search_term' ] ),
+					func.lower( Movie.genre ).contains( session[ 'search_term' ] )
+				)
+			).order_by( Movie.title ) # Sort on title
+		case 'title_reverse' :
+			# Get data from db, search in title and genre
+			search_result = Movie.query.filter(
+				Movie.user_id == current_user.id,
+				or_(
+					func.lower( Movie.title ).contains( session[ 'search_term' ] ),
+					func.lower( Movie.genre ).contains( session[ 'search_term' ] )
+				)
+			).order_by( desc( Movie.title ) ) # Sort on title, reversed
+		case 'genre' :
+			# Get data from db, search in title and genre
+			search_result = Movie.query.filter(
+				Movie.user_id == current_user.id,
+				or_(
+					func.lower( Movie.title ).contains( session[ 'search_term' ] ),
+					func.lower( Movie.genre ).contains( session[ 'search_term' ] )
+				)
+			).order_by( Movie.genre ) # Sort on genre
+		case 'genre_reverse' :
+			# Get data from db, search in title and genre
+			search_result = Movie.query.filter(
+				Movie.user_id == current_user.id,
+				or_(
+					func.lower( Movie.title ).contains( session[ 'search_term' ] ),
+					func.lower( Movie.genre ).contains( session[ 'search_term' ] )
+				)
+			).order_by( desc( Movie.genre ) ) # Sort on genre, reversed
+		case 'length' :
+			# Get data from db, search in title and genre
+			search_result = Movie.query.filter(
+				Movie.user_id == current_user.id,
+				or_(
+					func.lower( Movie.title ).contains( session[ 'search_term' ] ),
+					func.lower( Movie.genre ).contains( session[ 'search_term' ] )
+				)
+			).order_by( Movie.length ) # Sort on length
+		case 'length_reverse' :
+			# Get data from db, search in title and genre
+			search_result = Movie.query.filter(
+				Movie.user_id == current_user.id,
+				or_(
+					func.lower( Movie.title ).contains( session[ 'search_term' ] ),
+					func.lower( Movie.genre ).contains( session[ 'search_term' ] )
+				)
+			).order_by( desc( Movie.length ) ) # Sort on length, reversed
+		case _ :
+			# Get data from db, search in title and genre, sort on position
+			search_result = Movie.query.filter(
+				Movie.user_id == current_user.id,
+				or_(
+					func.lower( Movie.title ).contains( session[ 'search_term' ] ),
+					func.lower( Movie.genre ).contains( session[ 'search_term' ] )
+				)
+			).order_by( Movie.position )
+	return search_result
 
 
 @views.post( '/' )
@@ -36,7 +112,7 @@ def home_post() :
 		new_movie = Movie( title = form_title, img_src = form_img_url, genre = form_genre, length = form_length, user_id = current_user.id )
 		# Register the movie in the database
 		current_user.movies.append( new_movie )
-		#current_user.movies.reorder()
+		current_user.movies.reorder()
 		db.session.commit()
 		flash( 'Movie was added!', category = 'success' )
 	# Show the home page
@@ -49,24 +125,23 @@ def home_post() :
 def home_get() :
 	"""
 	Shows the home page
+	Initializes a few session vars
 	:return: The home HTML page using a Flask template
 	"""
-	#
-	#current_user.movies.reorder()
-	#db.session.commit()
-
-	# Init a user's session variables that is used to sort or search movies
-	if not 'sort_key' in session : session[ 'sort_key'    ] = ''
+	# Init missing session variables that are used to sort or search movies
 	if not 'search_term' in session : session[ 'search_term' ] = ''
-
-	# Populate
-	search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.position )
-
-	print( current_user )
+	if not 'sort_key' in session : session[ 'sort_key'    ] = ''
+	if not 'sortbtn_title_reverse' in session : session[ 'sortbtn_title_reverse' ] = False
+	if not 'sortbtn_genre_reverse' in session : session[ 'sortbtn_genre_reverse' ] = False
+	if not 'sortbtn_length_reverse' in session : session[ 'sortbtn_length_reverse' ] = False
+	# Populate list with movies with default sorting
+	search_result = get_movies_from_db()
+	# Log some info
+	print( f'current_user: [{current_user}]' )
 	sep = ''
 	for m in current_user.movies : print( f'{sep}(p:{m.position} t:{m.title} i:{m.id})', end='' ); sep = ', '
 	print( '' )
-
+	# Return the page
 	return render_template( 'home.html', app_title = app_title, user = current_user, search_result = search_result, sort_key = session[ 'sort_key' ], time = time_ns()  )
 
 
@@ -93,7 +168,7 @@ def delete_movie() :
 			current_user.movies.reorder()
 			# Register the change in the database
 			db.session.commit()
-	# Must return something
+	# Must return something, return empty JSON
 	return jsonify( {} )
 
 
@@ -118,7 +193,7 @@ def done_movie() :
 		movie.done = movie_done
 		# Register the change in the database
 		db.session.commit()
-	# Must return something
+	# Must return something, return empty JSON
 	return jsonify( { } )
 
 
@@ -143,7 +218,7 @@ def update_movie_title() :
 		movie.title = movie_title
 		# Register the change in the database
 		db.session.commit()
-	# Must return something
+	# Must return something, return empty JSON
 	return jsonify( { } )
 
 
@@ -168,7 +243,7 @@ def update_movie_genre() :
 		movie.genre = movie_genre
 		# Register the change in the database
 		db.session.commit()
-	# Must return something
+	# Must return something, return empty JSON
 	return jsonify( { } )
 
 
@@ -193,7 +268,7 @@ def update_movie_length() :
 		movie.length = movie_length
 		# Register the change in the database
 		db.session.commit()
-	# Must return something
+	# Must return something, return empty JSON
 	return jsonify( { } )
 
 
@@ -216,7 +291,7 @@ def update_movie_poster() :
 	if movie and movie.user_id == current_user.id:
 		movie.img_src = movie_poster_url
 		db.session.commit()
-	# Must return something
+	# Must return something, return empty JSON
 	return jsonify( { } )
 
 
@@ -228,56 +303,15 @@ def search_get() :
 	This is used for searching movies on title or genre
 	:return: HTML list elements containing the movies
 	"""
-	print( session[ 'sort_key' ] )
-
-	search_result = []
 	# Get form data
 	search_term = request.args.get( 'q' )
-	if search_term :
-		session[ 'search_term' ] = search_term
-		match session[ 'sort_key' ]:
-			case 'title' :
-				search_result = Movie.query.filter(
-					Movie.user_id == current_user.id,
-					or_(
-						func.lower( Movie.title ).contains( search_term ),
-						func.lower( Movie.genre ).contains( search_term )
-					)
-				).order_by( Movie.title )
-			case 'genre' :
-				search_result = Movie.query.filter(
-					Movie.user_id == current_user.id,
-					or_(
-						func.lower( Movie.title ).contains( search_term ),
-						func.lower( Movie.genre ).contains( search_term )
-					)
-				).order_by( Movie.genre )
-			case 'length' :
-				search_result = Movie.query.filter(
-					Movie.user_id == current_user.id,
-					or_(
-						func.lower( Movie.title ).contains( search_term ),
-						func.lower( Movie.genre ).contains( search_term )
-					)
-				).order_by( Movie.length )
-			case _ :
-				search_result = Movie.query.filter(
-					Movie.user_id == current_user.id,
-					or_(
-						func.lower( Movie.title ).contains( search_term ),
-						func.lower( Movie.genre ).contains( search_term )
-					)
-				).order_by( Movie.position )
-	else :
-		match session[ 'sort_key' ]:
-			case 'title' :
-				search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.title )
-			case 'genre' :
-				search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.genre )
-			case 'length' :
-				search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.length )
-			case _ :
-				search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.position )
+	if search_term : session[ 'search_term' ] = search_term
+	else : session[ 'search_term' ] = ''
+	# Log some info
+	print( f'session sort_key: [{session[ "sort_key" ]}]' )
+	print( f'session search_term: [{session[ "search_term" ]}]' )
+
+	search_result = get_movies_from_db()
 	return render_template( 'movies.html', search_result = search_result, query = search_term, sort_key = session[ 'sort_key' ] )
 
 
@@ -286,16 +320,21 @@ def search_get() :
 @login_required
 def arrange_post() :
 	"""
+	Used for rearranging the movies in the list
 	Reads JSON data that was sent
 	"""
+	# Get JSON data that was sent
 	json_data = json.loads( request.data )
+	movie_id = json_data.get( 'id' )
 	movie_placement = json_data.get( 'placement' )
+	# Find the movie in db
+	qm = Movie.query.get( movie_id )
+	# Make sure the placement is valid
 	alts = [ 'first', 'up', 'down', 'last' ]
-	if movie_placement in alts :
-		movie_id = json_data.get( 'id' )
-		qm = Movie.query.get( movie_id )
-		print( f'p:{qm.position} t:{qm.title} i:{qm.id}' )
-		print( f'where: {movie_placement}' )
+	if qm and movie_placement in alts :
+		# Log some info
+		print( f'p:{qm.position}  t:{qm.title}  i:{qm.id}  where:[{movie_placement}]' )
+		# Remove movie from list
 		movie = current_user.movies.pop( qm.position )
 		new_position = qm.position
 		match movie_placement :
@@ -310,8 +349,8 @@ def arrange_post() :
 				current_user.movies.insert( new_position, movie )
 			case 'last' :
 				current_user.movies.append( movie )
-			#case _ :
-				#print( 'Not allowed!' )
+			case _ :
+				print( 'Not allowed!' )
 		current_user.movies.reorder()
 		db.session.commit()
 	return render_template( 'movies.html', search_result = current_user.movies )
@@ -326,50 +365,66 @@ def sort_get() :
 	Takes a query parameter that is used as a sort key
 	:return: A key-sorted list of HTML LI elements containing the movies
 	"""
-	# Save current sort key
-	old_key = session[ 'sort_key' ]
-	# Get form data
+	# Save current session sort key
+	old_session_key = session[ 'sort_key' ]
+	# Get query vars
 	received_key = request.args.get( 'key' )
-	print( f'old key: {old_key},  received key: {received_key}' )
+	# Log some info
+	print( f'received key from ui: [{received_key}],  old session key: [{old_session_key}]' )
+	# Set the sort key to a sane state
+	if not received_key : received_key = ''
+	# Reverse the sorting order only if the user requested same sort key a second time in a row
+	new_session_key = received_key
 
-	if received_key : new_key = received_key
-	else : new_key = ''
+	if received_key == 'title' : # Assuming that the user has clicked on the sort button "Title"
+		if 'title' in old_session_key : # Same button was clicked twise in a row, change the state
+			if session[ 'sortbtn_title_reverse' ] :
+				session[ 'sortbtn_title_reverse' ] = False
+				new_session_key = 'title'
+			else :
+				session[ 'sortbtn_title_reverse' ] = True
+				new_session_key = 'title_reverse'
+		else :                          # Different button was clicked than before, keep same state
+			if session[ 'sortbtn_title_reverse' ] :
+				new_session_key = 'title_reverse'
+			else :
+				new_session_key = 'title'
 
-	match new_key :
-		case 'title' :
-			if old_key == 'title' : new_key = 'title_reverse'
-			if old_key == 'title_reverse' : new_key = 'title'
-		case 'genre' :
-			if old_key == 'genre' : new_key = 'genre_reverse'
-			if old_key == 'genre_reverse' : new_key = 'genre'
-		case 'length' :
-			if old_key == 'length' : new_key = 'length_reverse'
-			if old_key == 'length_reverse' : new_key = 'length'
+	if received_key == 'genre' :
+		if 'genre' in old_session_key : # Same button was clicked twise in a row, change the state
+			if session[ 'sortbtn_genre_reverse' ] :
+				session[ 'sortbtn_genre_reverse' ] = False
+				new_session_key = 'genre'
+			else :
+				session[ 'sortbtn_genre_reverse' ] = True
+				new_session_key = 'genre_reverse'
+		else :                          # Different button was clicked than before, keep same state
+			if session[ 'sortbtn_genre_reverse' ] :
+				new_session_key = 'genre_reverse'
+			else :
+				new_session_key = 'genre'
 
-	current_key = new_key
+	if received_key == 'length' :
+		if 'length' in old_session_key : # Same button was clicked twise in a row, change the state
+			if session[ 'sortbtn_length_reverse' ] :
+				session[ 'sortbtn_length_reverse' ] = False
+				new_session_key = 'length'
+			else :
+				session[ 'sortbtn_length_reverse' ] = True
+				new_session_key = 'length_reverse'
+		else :                          # Different button was clicked than before, keep same state
+			if session[ 'sortbtn_length_reverse' ] :
+				new_session_key = 'length_reverse'
+			else :
+				new_session_key = 'length'
 
-	print( f'current key: {current_key},  old key: {old_key}' )
-
+	# Log some info
+	print( f'current key: [{new_session_key}]' )
 	# Set session variable sort_key which is used to sort the list
-	session[ 'sort_key' ] = current_key
-
-	search_result = []
-	match current_key :
-		case 'title' :
-			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.title )
-		case 'title_reverse' :
-			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( desc( Movie.title ) )
-		case 'genre' :
-			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.genre )
-		case 'genre_reverse' :
-			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( desc( Movie.genre ) )
-		case 'length' :
-			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.length )
-		case 'length_reverse' :
-			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( desc( Movie.length ) )
-		case _ :
-			search_result = Movie.query.filter( Movie.user_id == current_user.id ).order_by( Movie.position )
-	return render_template( 'movies.html', search_result = search_result, query = current_key )
+	session[ 'sort_key' ] = new_session_key
+	search_result = get_movies_from_db()
+	# Return the movies page
+	return render_template( 'movies.html', search_result = search_result, query = new_session_key, sort_key = new_session_key )
 
 
 
@@ -377,37 +432,23 @@ def sort_get() :
 @login_required
 def sortbtns_get() :
 	"""
-	Used for UI
+	Used for rendering of sort buttons in GUI
 	:return: HTML code describing the sort buttons
 	"""
-
+	# Create default button states
 	sort_buttons = []
 	sort_buttons.append( { 'btn_id' : 'btn_sort_off',    'btn_class' : 'btn-outline-success', 'label': 'Sort:Off', 'sort_key': '',       'reverse' : False } )
-	sort_buttons.append( { 'btn_id' : 'btn_sort_title',  'btn_class' : 'btn-outline-success', 'label': 'Title',    'sort_key': 'title',  'reverse' : None } )
-	sort_buttons.append( { 'btn_id' : 'btn_sort_genre',  'btn_class' : 'btn-outline-success', 'label': 'Genre',    'sort_key': 'genre',  'reverse' : None } )
-	sort_buttons.append( { 'btn_id' : 'btn_sort_length', 'btn_class' : 'btn-outline-success', 'label': 'Length',   'sort_key': 'length', 'reverse' : None } )
+	sort_buttons.append( { 'btn_id' : 'btn_sort_title',  'btn_class' : 'btn-outline-success', 'label': 'Title',    'sort_key': 'title',  'reverse' : session[ 'sortbtn_title_reverse' ] } )
+	sort_buttons.append( { 'btn_id' : 'btn_sort_genre',  'btn_class' : 'btn-outline-success', 'label': 'Genre',    'sort_key': 'genre',  'reverse' : session[ 'sortbtn_genre_reverse' ] } )
+	sort_buttons.append( { 'btn_id' : 'btn_sort_length', 'btn_class' : 'btn-outline-success', 'label': 'Length',   'sort_key': 'length', 'reverse' : session[ 'sortbtn_length_reverse' ] } )
 
-	match session[ 'sort_key' ] :
-		case '' :
-			sort_buttons[ 0 ][ 'btn_class' ] = 'btn-success'
-		case 'title' :
-			sort_buttons[ 1 ][ 'btn_class' ] = 'btn-success'
-			sort_buttons[ 1 ][ 'reverse' ] = False
-		case 'title_reverse' :
-			sort_buttons[ 1 ][ 'btn_class' ] = 'btn-success'
-			sort_buttons[ 1 ][ 'reverse' ] = True
-		case 'genre' :
-			sort_buttons[ 2 ][ 'btn_class' ] = 'btn-success'
-			sort_buttons[ 2 ][ 'reverse' ] = False
-		case 'genre_reverse' :
-			sort_buttons[ 2 ][ 'btn_class' ] = 'btn-success'
-			sort_buttons[ 2 ][ 'reverse' ] = True
-		case 'length' :
-			sort_buttons[ 3 ][ 'btn_class' ] = 'btn-success'
-			sort_buttons[ 3 ][ 'reverse' ] = False
-		case 'length_reverse' :
-			sort_buttons[ 3 ][ 'btn_class' ] = 'btn-success'
-			sort_buttons[ 3 ][ 'reverse' ] = True
+	# Modify states of the sort buttons depending on the current session var sort_key
+	# This changes the jinja variable used for rendering the html page for sort buttons
+	match session[ 'sort_key' ].removesuffix( '_reverse' ) :
+		case '' : sort_buttons[ 0 ][ 'btn_class' ] = 'btn-success'
+		case 'title' : sort_buttons[ 1 ][ 'btn_class' ] = 'btn-success'
+		case 'genre' : sort_buttons[ 2 ][ 'btn_class' ] = 'btn-success'
+		case 'length' : sort_buttons[ 3 ][ 'btn_class' ] = 'btn-success'
 
-	print( session[ 'sort_key' ] )
-	return render_template( 'sortbtns.html', sort_key = session[ 'sort_key' ], sort_buttons = sort_buttons )
+	# Return the buttons page
+	return render_template( 'sortbtns.html', sort_key = session[ 'sort_key' ], sort_buttons = sort_buttons, time = time_ns() )

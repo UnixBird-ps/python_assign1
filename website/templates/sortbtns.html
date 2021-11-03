@@ -1,14 +1,18 @@
+{# Loop through the list of buttons used for sorting and render them according to their state #}
 {% for b in sort_buttons %}
-	<button id="{{b.btn_id}}" class="btn {{b.btn_class}} btn-sm" onclick="reqSorted( '{{b.sort_key}}' )">
+	<button id="{{b.btn_id}}" class="btn {{b.btn_class}} btn-sm {% if not loop.first %}pe-4{% endif %}" onclick="reqSorted( '{{b.sort_key}}' )">
 		{{b.label}}
 		{% if not loop.first %}
-			<span class="no-pointer-events position-absolute top-50 start-100 translate-middle badge material-icons" style="color: inherit;">
 		{% if b.reverse %}
+			<span class="badge no-pointer-events position-absolute top-50 end-0 translate-middle-y material-icons p-0" style="color: inherit;">
 				arrow_drop_down
-		{% else %}
-				arrow_drop_up
-		{% endif %}
 			</span>
+		{% endif %}
+		{% if not b.reverse %}
+			<span class="badge no-pointer-events position-absolute top-50 end-0 translate-middle-y material-icons p-0" style="color: inherit;">
+				arrow_drop_up
+			</span>
+		{% endif %}
 		{% endif %}
 	</button>
 {% endfor %}

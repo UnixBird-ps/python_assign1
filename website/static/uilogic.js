@@ -5,7 +5,6 @@ window.onload = function()
 	reqMoviesAsHtmlListItems();
 
 	var pE = document.getElementById( 'navbar-container' );
-	//var pTitle = document.getElementById( 'app-title' );
 
 	if ( pE && document.body )
 	{
@@ -243,21 +242,20 @@ function reqMoviesAsHtmlListItems( pQ )
 						var lListElement = document.getElementById( 'movies' );
 						lListElement.innerHTML = text;
 
-					fetch( '/ui/sort-buttons' )
-					.then(
-						_res =>
-						{
-							_res.text()
-							.then(
-								text =>
-								{
-									var lSortButtons = document.getElementById( 'sort-buttons-container' );
-									lSortButtons.innerHTML = text;
-								}
-							);
-						}
-					);
-
+						fetch( '/ui/sort-buttons' )
+						.then(
+							_res =>
+							{
+								_res.text()
+								.then(
+									text =>
+									{
+										var lSortButtons = document.getElementById( 'sort-buttons-container' );
+										lSortButtons.innerHTML = text;
+									}
+								);
+							}
+						);
 					}
 				);
 			}
@@ -271,7 +269,7 @@ function handleSearchReset( pInputBox )
 {
 	if ( pInputBox.value != pInputBox.dataset.lastvalue )
 	{
-		if ( pInputBox.dataset.lastvalue.length > 0 && ! pInputBox.value.length > 0 ) reqMoviesAsHtmlListItems();
+		if ( pInputBox.dataset.lastvalue.length > 0 && ! pInputBox.value.length > 0 ) reqMoviesAsHtmlListItems( '' );
 		pInputBox.dataset.lastvalue = pInputBox.value;
 	}
 }
@@ -319,7 +317,7 @@ function reqSorted( pSortKey )
 					var lListElement = document.getElementById( 'movies' );
 					lListElement.innerHTML = text;
 
-					fetch( '/ui/sort-buttons' )
+					fetch( '/ui/sort-buttons?u=' + Date.now() )
 					.then(
 						_res =>
 						{
