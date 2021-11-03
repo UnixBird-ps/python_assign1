@@ -1,42 +1,14 @@
-{% if sort_key == '' %}
-	<button id="btn_sort_off" class="btn btn-success         btn-sm" onclick="reqSorted( '' )">Sort:Off</button>
-	<button id="btn_sort_title" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'title' )">Sort:Title</button>
-	<button id="btn_sort_genre" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'genre' )">Sort:Genre</button>
-	<button id="btn_sort_length" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'length' )">Sort:Length</button>
-{% endif %}
-{% if sort_key == 'title' %}
-	<button id="btn_sort_off" class="btn btn-outline-success btn-sm" onclick="reqSorted( '' )">Sort:Off</button>
-	<button id="btn_sort_title" class="btn btn-success         btn-sm" onclick="reqSorted( 'title' )">Sort:Title<span class="position-absolute top-50 start-100 translate-middle badge material-icons">arrow_drop_down</span></button>
-	<button id="btn_sort_genre" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'genre' )">Sort:Genre</button>
-	<button id="btn_sort_length" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'length' )">Sort:Length</button>
-{% endif %}
-{% if sort_key == 'title_reverse' %}
-	<button id="btn_sort_off" class="btn btn-outline-success btn-sm" onclick="reqSorted( '' )">Sort:Off</button>
-	<button id="btn_sort_title" class="btn btn-success         btn-sm" onclick="reqSorted( 'title' )">Sort:Title<span class="position-absolute top-50 start-100 translate-middle badge material-icons">arrow_drop_up</span></button>
-	<button id="btn_sort_genre" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'genre' )">Sort:Genre</button>
-	<button id="btn_sort_length" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'length' )">Sort:Length</button>
-{% endif %}
-{% if sort_key == 'genre' %}
-	<button id="btn_sort_off" class="btn btn-outline-success btn-sm" onclick="reqSorted( '' )">Sort:Off</button>
-	<button id="btn_sort_title" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'title' )">Sort:Title</button>
-	<button id="btn_sort_genre" class="btn btn-success         btn-sm" onclick="reqSorted( 'genre' )">Sort:Genre<span class="position-absolute top-50 start-100 translate-middle badge material-icons">arrow_drop_down</span></button>
-	<button id="btn_sort_length" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'length' )">Sort:Length</button>
-{% endif %}
-{% if sort_key == 'genre_reverse' %}
-	<button id="btn_sort_off" class="btn btn-outline-success btn-sm" onclick="reqSorted( '' )">Sort:Off</button>
-	<button id="btn_sort_title" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'title' )">Sort:Title</button>
-	<button id="btn_sort_genre" class="btn btn-success         btn-sm" onclick="reqSorted( 'genre' )">Sort:Genre<span class="position-absolute top-50 start-100 translate-middle badge material-icons">arrow_drop_up</span></button>
-	<button id="btn_sort_length" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'length' )">Sort:Length</button>
-{% endif %}
-{% if sort_key == 'length' %}
-	<button id="btn_sort_off" class="btn btn-outline-success btn-sm" onclick="reqSorted( '' )">Sort:Off</button>
-	<button id="btn_sort_title" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'title' )">Sort:Title</button>
-	<button id="btn_sort_genre" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'genre' )">Sort:Genre</button>
-	<button id="btn_sort_length" class="btn btn-success         btn-sm" onclick="reqSorted( 'length' )">Sort:Length<span class="position-absolute top-50 start-100 translate-middle badge material-icons">arrow_drop_down</span></button>
-{% endif %}
-{% if sort_key == 'length_reverse' %}
-	<button id="btn_sort_off" class="btn btn-outline-success btn-sm" onclick="reqSorted( '' )">Sort:Off</button>
-	<button id="btn_sort_title" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'title' )">Sort:Title</button>
-	<button id="btn_sort_genre" class="btn btn-outline-success btn-sm" onclick="reqSorted( 'genre' )">Sort:Genre</button>
-	<button id="btn_sort_length" class="btn btn-success         btn-sm" onclick="reqSorted( 'length' )">Sort:Length<span class="position-absolute top-50 start-100 translate-middle badge material-icons">arrow_drop_up</span></button>
-{% endif %}
+{% for b in sort_buttons %}
+	<button id="{{b.btn_id}}" class="btn {{b.btn_class}} btn-sm" onclick="reqSorted( '{{b.sort_key}}' )">
+		{{b.label}}
+		{% if not loop.first %}
+			<span class="no-pointer-events position-absolute top-50 start-100 translate-middle badge material-icons" style="color: inherit;">
+		{% if b.reverse %}
+				arrow_drop_down
+		{% else %}
+				arrow_drop_up
+		{% endif %}
+			</span>
+		{% endif %}
+	</button>
+{% endfor %}

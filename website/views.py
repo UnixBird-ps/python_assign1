@@ -380,5 +380,34 @@ def sortbtns_get() :
 	Used for UI
 	:return: HTML code describing the sort buttons
 	"""
+
+	sort_buttons = []
+	sort_buttons.append( { 'btn_id' : 'btn_sort_off',    'btn_class' : 'btn-outline-success', 'label': 'Sort:Off', 'sort_key': '',       'reverse' : False } )
+	sort_buttons.append( { 'btn_id' : 'btn_sort_title',  'btn_class' : 'btn-outline-success', 'label': 'Title',    'sort_key': 'title',  'reverse' : None } )
+	sort_buttons.append( { 'btn_id' : 'btn_sort_genre',  'btn_class' : 'btn-outline-success', 'label': 'Genre',    'sort_key': 'genre',  'reverse' : None } )
+	sort_buttons.append( { 'btn_id' : 'btn_sort_length', 'btn_class' : 'btn-outline-success', 'label': 'Length',   'sort_key': 'length', 'reverse' : None } )
+
+	match session[ 'sort_key' ] :
+		case '' :
+			sort_buttons[ 0 ][ 'btn_class' ] = 'btn-success'
+		case 'title' :
+			sort_buttons[ 1 ][ 'btn_class' ] = 'btn-success'
+			sort_buttons[ 1 ][ 'reverse' ] = False
+		case 'title_reverse' :
+			sort_buttons[ 1 ][ 'btn_class' ] = 'btn-success'
+			sort_buttons[ 1 ][ 'reverse' ] = True
+		case 'genre' :
+			sort_buttons[ 2 ][ 'btn_class' ] = 'btn-success'
+			sort_buttons[ 2 ][ 'reverse' ] = False
+		case 'genre_reverse' :
+			sort_buttons[ 2 ][ 'btn_class' ] = 'btn-success'
+			sort_buttons[ 2 ][ 'reverse' ] = True
+		case 'length' :
+			sort_buttons[ 3 ][ 'btn_class' ] = 'btn-success'
+			sort_buttons[ 3 ][ 'reverse' ] = False
+		case 'length_reverse' :
+			sort_buttons[ 3 ][ 'btn_class' ] = 'btn-success'
+			sort_buttons[ 3 ][ 'reverse' ] = True
+
 	print( session[ 'sort_key' ] )
-	return render_template( 'sortbtns.html', sort_key = session[ 'sort_key' ] )
+	return render_template( 'sortbtns.html', sort_key = session[ 'sort_key' ], sort_buttons = sort_buttons )

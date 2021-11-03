@@ -79,6 +79,11 @@ Set position to hover just above top right corner of hovered element
 	z-index: 1;
 }
 
+.no-pointer-events
+{
+	pointer-events: none;
+}
+
 /*
 Change visibility for elements of class tooltiptext
 when pointer is hovering on a HTML element of class tooltipped
